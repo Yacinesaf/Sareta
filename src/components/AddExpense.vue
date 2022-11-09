@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="dialog" width="500">
     <template v-slot:activator="{ on, attrs }">
-      <v-btn v-bind="attrs" v-on="on" color="primary" elevation="2">Add Expense</v-btn>
+      <v-btn v-bind="attrs" v-on="on" color="primary" elevation="2">Add expense</v-btn>
     </template>
     <v-card>
       <v-card-title> Expense </v-card-title>

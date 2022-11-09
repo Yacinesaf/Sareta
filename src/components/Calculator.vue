@@ -1,13 +1,13 @@
 <template>
   <v-row align-content="center" justify="center">
     <v-row justify="center">
-      <v-col cols="10">
+      <v-col cols="9">
         <v-row class="mb-3">
           <v-col>
             <h1>Budget Name</h1>
             <div>Budget Description</div>
           </v-col>
-          <v-col><assignee-card :assignees="['dddd', 'fff', 'eeee', 'gggg', 'dddd', 'fff', 'eeee', 'gggg']" /></v-col>
+          <v-col cols="4"><assignee-card :assignees="['dddd', 'fff', 'eeee', 'gggg', 'dddd', 'fff', 'eeee', 'gggg']" /></v-col>
         </v-row>
         <div><detailed-results /></div>
         <div class="my-3 d-flex justify-end"><add-expense /></div>

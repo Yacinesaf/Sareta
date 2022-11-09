@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-app-bar color="deep-purple accent-4" dense dark>
+    <v-app-bar color="primary" dense dark>
       <v-icon>mdi-home</v-icon>
       <v-spacer></v-spacer>
 

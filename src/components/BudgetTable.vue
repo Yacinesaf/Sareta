@@ -1,34 +1,26 @@
 <template>
   <div>
     <v-card class="rounded-lg">
-      <v-simple-table>
-        <template v-slot:default>
-          <thead>
-            <tr>
-              <th style="width: 60px !important" v-if="doesHaveAssignee" class="text-center">
-                <v-checkbox class="ml-2" v-model="checkAll"></v-checkbox>
-              </th>
-              <th :key="i" v-for="(header, i) in tableHeaders" class="text-center">{{ header }}</th>
-              <th v-if="doesHaveAssignee" class="text-center">Assignee</th>
-              <th v-if="doesHaveAssignee" class="text-center"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr style="width: inherit" :key="i" v-for="(expense, i) in expenses" class="text-center">
-              <td>
-                <v-checkbox class="ml-2" v-model="expense.checked"></v-checkbox>
-              </td>
-              <td>{{ expense.name }}</td>
-              <td>{{ expense.frequency }}</td>
-              <td>{{ amount(expense.amount) }}</td>
-              <td>{{ expense.assignee }}</td>
-              <td style="text-align: end; width: 60px !important; cursor: pointer">
-                <v-icon style="padding: 5px" class="deleteIcon" color="red lighten-1">mdi-delete-outline</v-icon>
-              </td>
-            </tr>
-          </tbody>
+      <v-data-table
+        :sort-by="['name', 'frequency', 'amount', 'assignee']"
+        v-model="selected"
+        :single-select="singleSelect"
+        show-select
+        :headers="tableHeader"
+        :items="expenses"
+        :items-per-page="5"
+        class="elevation-1"
+        item-key="name"
+      >
+        <template v-slot:item.action="{ item }">
+          <v-btn icon @click="editExpense(item)">
+            <v-icon>mdi-pencil</v-icon>
+          </v-btn>
+          <v-btn icon @click="deleteExpense(item)">
+            <v-icon>mdi-delete</v-icon>
+          </v-btn>
         </template>
-      </v-simple-table>
+      </v-data-table>
     </v-card>
   </div>
 </template>
@@ -37,19 +29,27 @@
 export default {
   data() {
     return {
-      tableHeaders: ["Name", "Frequency", "Amount"],
-      doesHaveAssignee: true,
-      checkAll: false,
+      tableHeader: [
+        { text: "", value: "checkbox" },
+        { text: "Name", value: "name" },
+        { text: "Frequency", value: "frequency" },
+        { text: "Amount", value: "amount" },
+        { text: "Assignee", value: "assignee", align: this.doesHaveAssignee ? "d-block" : "d-none" },
+        { text: "", value: "action", align: "right" },
+      ],
+      doesHaveAssignee: false,
+      singleSelect: false,
+      selected: [],
       userCurencySymbol: "$",
       expenses: [
-        { name: "car gas", frequency: "weekly", amount: 51.27, assignee: "Islam" },
-        { name: "car gas", frequency: "weekly", amount: 51.27, assignee: "yacine" },
-        { name: "car gas", frequency: "weekly", amount: 51.27, assignee: "Islam" },
-        { name: "car gas", frequency: "weekly", amount: 51.27, assignee: "Islam" },
-        { name: "car gas", frequency: "weekly", amount: 51.27, assignee: "Islam" },
-        { name: "car gas", frequency: "weekly", amount: 51.27, assignee: "Islam" },
-        { name: "car gas", frequency: "weekly", amount: 51.27, assignee: "Islam" },
-        { name: "car gas", frequency: "weekly", amount: 51.27, assignee: "Islam" },
+        { name: "car gass", frequency: "weekly", amount: 51.27, assignee: "Islam" },
+        { name: "car gasss", frequency: "weekly", amount: 51.27, assignee: "yacine" },
+        { name: "car gassss", frequency: "weekly", amount: 51.27, assignee: "Islam" },
+        { name: "car gasw", frequency: "weekly", amount: 51.27, assignee: "Islam" },
+        { name: "car gase", frequency: "weekly", amount: 51.27, assignee: "Islam" },
+        { name: "car gast", frequency: "weekly", amount: 51.27, assignee: "Islam" },
+        { name: "car gasr", frequency: "weekly", amount: 51.27, assignee: "Islam" },
+        { name: "car gasy", frequency: "weekly", amount: 51.27, assignee: "Islam" },
       ],
     };
   },
@@ -62,13 +62,13 @@ export default {
     amount(amount) {
       return `${parseFloat(amount).toFixed(2)} ${this.userCurencySymbol}`;
     },
+    deleteExpense(expense) {
+      console.log(expense);
+    },
+    editExpense(expense) {
+      console.log(expense);
+    },
   },
 };
 </script>
-<style scoped>
-.deleteIcon:hover {
-  background-color: #ffcdd2;
-  padding: 5px;
-  border-radius: 20px;
-}
-</style>
+<style scoped></style>
