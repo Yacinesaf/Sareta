@@ -2,10 +2,10 @@
   <div class="d-flex justify-center px-3" style="align-items: center; height: 100vh; width: 100%">
     <v-row style="position: absolute; z-index: 2; width: 100%" justify="center">
       <v-col class="px-0 entryCard" cols="11" sm="9" md="6" lg="4">
-        <v-card style="border-radius: 16px; z-index: 5">
+        <v-card style="border-radius: 16px">
           <v-row justify="center">
-            <v-col class="py-12" cols="10">
-              <div class="text-h4 text-center mb-16" style="font-weight: 700">
+            <v-col class="pt-12 pb-6" cols="10">
+              <div class="text-h4 text-center mb-10" style="font-weight: 700">
                 {{ isLoggingIn ? "Login" : "Sign up" }}
               </div>
               <v-form v-model="valid" ref="form">
@@ -14,54 +14,81 @@
                   class="pt-3"
                   style="border-radius: 6px"
                   placeholder="Name"
-                  filled
+                  outlined
+                  v-show="!isLoggingIn"
                 ></v-text-field>
                 <v-text-field
-                  :rules="[rules.required, rules.email]"
-                  class="pb-3"
+                  :rules="isLoggingIn ? [rules.required] : [rules.required, rules.email]"
                   style="border-radius: 6px"
                   placeholder="Email"
-                  filled
-                  v-show="!isLoggingIn"
+                  outlined
                 ></v-text-field>
                 <v-text-field
-                  class="pb-3"
                   style="border-radius: 6px"
                   placeholder="Net Income"
-                  filled
+                  outlined
                   v-show="!isLoggingIn"
                 ></v-text-field>
                 <v-text-field
-                  class="pb-3"
                   style="border-radius: 6px"
                   placeholder="approximate tax %"
-                  filled
+                  v-show="!isLoggingIn"
+                  outlined
                 ></v-text-field>
-                <v-text-field
-                  :rules="[rules.required, rules.min]"
-                  class="pb-3"
-                  :append-icon="showFirstPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                  :type="showFirstPassword ? 'text' : 'password'"
-                  v-model="password"
-                  style="border-radius: 6px"
-                  placeholder="Password"
-                  filled
-                  counter
-                  @click:append="showFirstPassword = !showFirstPassword"
-                ></v-text-field>
+                <div
+                  :class="{
+                    'mb-4': isLoggingIn,
+                  }"
+                  style="position: relative"
+                >
+                  <v-text-field
+                    :rules="isLoggingIn ? [rules.required] : [rules.required, rules.min]"
+                    :append-icon="showFirstPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                    :type="showFirstPassword ? 'text' : 'password'"
+                    v-model="password"
+                    style="border-radius: 6px"
+                    placeholder="Password"
+                    outlined
+                    :counter="!isLoggingIn"
+                    @click:append="showFirstPassword = !showFirstPassword"
+                  >
+                  </v-text-field>
+                  <div
+                    @click="forgotPasswordMode"
+                    style="position: absolute; right: 0; bottom: 4px; cursor: pointer"
+                    v-show="isLoggingIn"
+                  >
+                    Forgot password?
+                  </div>
+                </div>
                 <v-text-field
                   :rules="[rules.required, rules.matchingPasswords]"
-                  class="pb-3"
                   :append-icon="showSecondPassword ? 'mdi-eye' : 'mdi-eye-off'"
                   :type="showSecondPassword ? 'text' : 'password'"
                   v-model="password1"
                   style="border-radius: 6px"
                   placeholder="Confirm password"
-                  filled
+                  outlined
+                  v-show="!isLoggingIn"
                   @click:append="showSecondPassword = !showSecondPassword"
                 ></v-text-field>
                 <v-btn class="float-end" color="primary" @click="lo">{{ isLoggingIn ? "Login" : "Sign up" }}</v-btn>
               </v-form>
+            </v-col>
+            {{ is }}
+            <v-col cols="10">
+              <div v-if="isLoggingIn" class="text-center">
+                You don't have an account?
+                <span @click="SwitchingEntryForm" style="color: #21331d; cursor: pointer; font-weight: 600"
+                  >Sign up here.</span
+                >
+              </div>
+              <div v-else class="text-center">
+                You already have an account?
+                <span @click="SwitchingEntryForm" style="color: #21331d; cursor: pointer; font-weight: 600"
+                  >Log in here.</span
+                >
+              </div>
             </v-col>
           </v-row>
         </v-card>
@@ -72,9 +99,11 @@
 
 <script>
 export default {
+  computed: {},
   data() {
     return {
       isLoggingIn: false,
+      isForgotPasswordMode: false,
       showFirstPassword: false,
       showSecondPassword: false,
       valid: false,
@@ -99,6 +128,12 @@ export default {
     };
   },
   methods: {
+    SwitchingEntryForm() {
+      this.isLoggingIn = !this.isLoggingIn;
+    },
+    forgotPasswordMode() {
+      this.isForgotPasswordMode = true;
+    },
     lo() {
       this.$refs.form.validate();
     },
@@ -109,10 +144,9 @@ export default {
 <style scoped>
 .entryCard {
   border: 3px #404b3b solid;
-  min-height: 500px;
   border-radius: 16px;
-  box-shadow: -31px 29px 0px 2px rgba(33, 51, 29, 1);
-  -webkit-box-shadow: -31px 29px 0px 2px rgba(33, 51, 29, 1);
-  -moz-box-shadow: -31px 29px 0px 2px rgba(33, 51, 29, 1);
+  box-shadow: -30px 30px 0px 2px rgba(33, 51, 29, 1);
+  -webkit-box-shadow: -30px 30px 0px 2px rgba(33, 51, 29, 1);
+  -moz-box-shadow: -30px 30px 0px 2px rgba(33, 51, 29, 1);
 }
 </style>
