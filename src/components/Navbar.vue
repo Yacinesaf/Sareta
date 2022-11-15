@@ -1,22 +1,26 @@
 <template>
   <div>
     <v-app-bar color="primary" dense dark>
-      <v-icon>mdi-home</v-icon>
+      <v-row align="end" class="mx-0">
+        <div class="text-h4" style="font-family: 'Monoton', cursive !important">S</div>
+        <div style="padding-left: 1px" class="text-h6">areta</div>
+      </v-row>
       <v-spacer></v-spacer>
-
-      <v-btn icon>
-        <v-icon>mdi-heart</v-icon>
-      </v-btn>
-
-      <v-btn icon>
-        <v-icon>mdi-magnify</v-icon>
-      </v-btn>
+      <v-btn v-if="!ifUserIsConnected" outlined>Log in</v-btn>
+      <v-avatar v-else style="color: black" color="grey lighten-2" size="34"> YS </v-avatar>
     </v-app-bar>
   </div>
 </template>
 
 <script>
-export default {};
+import { mapState } from "vuex";
+export default {
+  computed: {
+    ...mapState({}),
+  },
+};
 </script>
 
-<style scoped></style>
+<style scoped>
+@import url("https://fonts.googleapis.com/css2?family=Monoton&display=swap");
+</style>

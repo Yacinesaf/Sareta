@@ -4,12 +4,15 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
     <v-main>
-      <!-- <navbar />
+      <!-- 
       <div class="mt-6">
         <back-to-home />
         <calculator />
       </div> -->
-      <router-view></router-view>
+      <navbar />
+      <div id="app" style="min-height: calc(100vh - 48px)">
+        <router-view></router-view>
+      </div>
     </v-main>
   </v-app>
 </template>
@@ -17,13 +20,13 @@
 <script>
 // import BackToHome from "./components/BackToHome.vue";
 // import Calculator from "./components/Calculator.vue";
-// import Navbar from "./components/Navbar.vue";
+import Navbar from "./components/Navbar.vue";
 export default {
   name: "App",
 
   components: {
     // Calculator,
-    // Navbar,
+    Navbar,
     // BackToHome,
   },
 
