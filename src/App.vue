@@ -10,9 +10,7 @@
         <calculator />
       </div> -->
       <navbar />
-      <div id="app" style="min-height: calc(100vh - 48px)">
-        <router-view></router-view>
-      </div>
+      <router-view style="min-height: calc(100vh - 48px)"></router-view>
     </v-main>
   </v-app>
 </template>
