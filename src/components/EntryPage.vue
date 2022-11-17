@@ -17,16 +17,19 @@
                 Choose a method to sign up and start improving your spening
               </div>
               <div class="d-flex align-center pt-6" style="flex-direction: column">
-                <v-btn @click="SsoSignInGoogle(facebookProvider)" x-large class="shadow my-3 justify-start">
-                  <span><v-icon color="primary" class="mr-2">mdi-facebook</v-icon></span>
-                  <span> Continue with Facebook </span>
-                </v-btn>
-                <v-btn @click="SsoSignInGoogle(googleProvider)" x-large class="shadow my-3 justify-start">
-                  <span><v-icon color="primary" class="mr-2">mdi-google</v-icon></span>
-                  <span> Continue with Google </span>
-                </v-btn>
-                <v-btn @click="emailSignupChosen" x-large class="shadow my-3 justify-start">
-                  <span><v-icon color="primary" class="mr-2">mdi-email</v-icon></span> <span> Sign up with email</span>
+                <v-btn
+                  :key="i"
+                  v-for="(btn, i) in signupBtns"
+                  :style="`min-width: ${btnWidth} !important;`"
+                  x-large
+                  @click="getSignupFunction(btn.icon)"
+                  class="shadow my-3 justify-start"
+                >
+                  <span
+                    ><v-icon color="primary" class="mr-2">mdi-{{ btn.icon }}</v-icon></span
+                  >
+                  <span class="mr-1" v-show="$vuetify.breakpoint.smAndUp">Continue with</span>
+                  <span>{{ btn.text }}</span>
                 </v-btn>
               </div>
             </v-col>
@@ -46,6 +49,14 @@
               <div v-else class="text-h5 text-md-h4 text-center mb-5 mb-md-10" style="font-weight: 700">
                 {{ isLoggingIn ? "Login" : "Sign up" }}
               </div>
+              <div class="d-flex justify-center my-6">
+                <v-btn class="mx-3" outlined style="height: 40px; width: 40px !important" color="primary" @click="ssoSignup(facebookProvider)"
+                  ><v-icon>mdi-facebook</v-icon></v-btn
+                >
+                <v-btn class="mx-3" outlined style="height: 40px; width: 40px !important" color="primary" @click="ssoSignup(googleProvider)"
+                  ><v-icon>mdi-google</v-icon></v-btn
+                >
+              </div>
               <v-form v-if="isForgotPasswordMode">
                 <div class="text-md-h6 text-center mb-4">
                   Please enter the email. If the email is linked to an account you'll receive an email to reset it.
@@ -55,6 +66,7 @@
                   style="border-radius: 6px"
                   placeholder="Email"
                   outlined
+                  :dense="$vuetify.breakpoint.xsOnly"
                 ></v-text-field>
                 <v-btn class="float-end" color="primary" @click="lo">Submit</v-btn>
               </v-form>
@@ -65,6 +77,7 @@
                   style="border-radius: 6px"
                   placeholder="Name"
                   outlined
+                  :dense="$vuetify.breakpoint.xsOnly"
                   v-show="!isLoggingIn"
                 ></v-text-field>
                 <v-text-field
@@ -77,6 +90,7 @@
                   style="border-radius: 6px"
                   placeholder="Net Income"
                   outlined
+                  :dense="$vuetify.breakpoint.xsOnly"
                   v-show="!isLoggingIn"
                 ></v-text-field>
                 <v-text-field
@@ -84,6 +98,7 @@
                   placeholder="approximate tax %"
                   v-show="!isLoggingIn"
                   outlined
+                  :dense="$vuetify.breakpoint.xsOnly"
                 ></v-text-field>
                 <div
                   :class="{
@@ -99,6 +114,7 @@
                     style="border-radius: 6px"
                     placeholder="Password"
                     outlined
+                    :dense="$vuetify.breakpoint.xsOnly"
                     :counter="!isLoggingIn"
                     @click:append="showFirstPassword = !showFirstPassword"
                   >
@@ -119,6 +135,7 @@
                   style="border-radius: 6px"
                   placeholder="Confirm password"
                   outlined
+                  :dense="$vuetify.breakpoint.xsOnly"
                   v-show="!isLoggingIn"
                   @click:append="showSecondPassword = !showSecondPassword"
                 ></v-text-field>
@@ -162,6 +179,13 @@ export default {
         return "Bg1.png";
       }
     },
+    btnWidth() {
+      if (this.$vuetify.breakpoint.xsOnly) {
+        return "180px";
+      } else {
+        return "310px";
+      }
+    },
   },
   data() {
     return {
@@ -192,11 +216,16 @@ export default {
           }
         },
       },
+      signupBtns: [
+        { text: "Facebook", icon: "facebook" },
+        { text: "Google", icon: "google" },
+        { text: "Email", icon: "email" },
+      ],
       user: null,
     };
   },
   methods: {
-    SsoSignInGoogle(provider) {
+    ssoSignup(provider) {
       signInWithPopup(this.auth, provider)
         .then((result) => {
           this.user = result.user;
@@ -214,7 +243,19 @@ export default {
           // // ...
         });
     },
-
+    getSignupFunction(method) {
+      switch (method) {
+        case "email":
+          this.emailSignupChosen();
+          break;
+        case "google":
+          this.ssoSignup(this.googleProvider);
+          break;
+        case "facebook":
+          this.ssoSignup(this.facebookProvider);
+          break;
+      }
+    },
     emailSignupChosen() {
       this.isChosingSignupMode = false;
     },
@@ -280,6 +321,5 @@ export default {
   box-shadow: -7.5px 7.5px 0px 2px rgba(33, 51, 29, 1);
   -webkit-box-shadow: -7.5px 7.5px 0px 2px rgba(33, 51, 29, 1);
   -moz-box-shadow: -7.5px 7.5px 0px 2px rgba(33, 51, 29, 1);
-  min-width: 290px !important;
 }
 </style>
