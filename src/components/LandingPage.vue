@@ -1,11 +1,11 @@
 <template>
   <v-row
     :style="{
-      backgroundImage: `url(${require('@/assets/Bg1.png')})`,
+      backgroundImage: `url(${require('@/assets/' + landingBg)})`,
       backgroundSize: 'cover',
       backgroundPosition: 'center',
     }"
-    class="ma-0"
+    class="ma-0 animationFadeout"
     justify="center"
     align="center"
   >
@@ -15,7 +15,7 @@
       </div>
       <div class="text-center pt-6">Sign up right now to structure you spending</div>
       <div class="d-flex justify-center pt-6">
-        <v-btn style="marin: auto" x-large class="shadow"> Sign up </v-btn>
+        <v-btn @click="goSignup" x-large class="shadow"> Sign up </v-btn>
       </div>
     </v-col>
     <div></div>
@@ -24,12 +24,26 @@
 
 <script>
 export default {
+  computed: {
+    landingBg() {
+      if (this.$vuetify.breakpoint.xs) {
+        return "BgMobile.png";
+      } else if (this.$vuetify.breakpoint.sm) {
+        return "BgIpad.png";
+      } else {
+        return "Bg1.png";
+      }
+    },
+  },
   data() {
     return {};
   },
-  mounted() {},
 
-  methods: {},
+  methods: {
+    goSignup() {
+      this.$router.push({ name: "EntryPage", params: { state: "signup" } });
+    },
+  },
 };
 </script>
 
@@ -41,5 +55,17 @@ export default {
   -webkit-box-shadow: -7.5px 7.5px 0px 2px rgba(33, 51, 29, 1);
   -moz-box-shadow: -7.5px 7.5px 0px 2px rgba(33, 51, 29, 1);
   cursor: pointer;
+}
+.animationFadeout {
+  animation: fadeOut;
+  animation-duration: 1s;
+}
+@keyframes fadeOut {
+  from {
+    opacity: 0%;
+  }
+  to {
+    opacity: 100%;
+  }
 }
 </style>

@@ -1,18 +1,53 @@
 <template>
-  <div class="d-flex justify-center px-3" style="align-items: center; min-height: calc(100vh - 48px)">
+  <div
+    :style="{
+      backgroundImage: `url(${require('@/assets/' + landingBg)})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+    }"
+    class="d-flex justify-center px-3 animationFadeout"
+    style="align-items: center; min-height: calc(100vh - 48px)"
+  >
     <v-row justify="center">
-      <v-col class="px-0 entryCard" cols="11" sm="9" md="6" lg="4" xl="3">
+      <v-col class="px-0 entryCard animationFadeout" cols="10" sm="9" md="6" lg="4" xl="3">
         <v-card style="border-radius: 16px">
           <v-row justify="center">
-            <v-col class="pt-12 pb-6" cols="10">
-              <div v-if="isForgotPasswordMode" class="text-h4 text-center mb-10" style="font-weight: 700">
+            <v-col cols="10" class="animationFadeout" v-if="isChosingSignupMode">
+              <div class="text-h5 text-center" style="font-weight: 600">
+                Choose a method to sign up and start improving your spening
+              </div>
+              <div class="d-flex align-center pt-6" style="flex-direction: column">
+                <v-btn @click="SsoSignInGoogle(facebookProvider)" x-large class="shadow my-3 justify-start">
+                  <span><v-icon color="primary" class="mr-2">mdi-facebook</v-icon></span>
+                  <span> Continue with Facebook </span>
+                </v-btn>
+                <v-btn @click="SsoSignInGoogle(googleProvider)" x-large class="shadow my-3 justify-start">
+                  <span><v-icon color="primary" class="mr-2">mdi-google</v-icon></span>
+                  <span> Continue with Google </span>
+                </v-btn>
+                <v-btn @click="emailSignupChosen" x-large class="shadow my-3 justify-start">
+                  <span><v-icon color="primary" class="mr-2">mdi-email</v-icon></span> <span> Sign up with email</span>
+                </v-btn>
+              </div>
+            </v-col>
+            <v-col v-else class="pt-12 pb-6 animationFadeout" cols="10">
+              <div v-if="!isLoggingIn" style="position: absolute; top: 2rem; left: 1rem">
+                <v-btn elevation="0" color="transparent" @click="returnToChosingSignUpMethod"
+                  ><v-icon size="xx-large">mdi-chevron-left</v-icon></v-btn
+                >
+              </div>
+              <div
+                v-if="isForgotPasswordMode"
+                class="text-h5 text-md-h4 text-center mb-5 mb-md-10"
+                style="font-weight: 700"
+              >
                 Reset password
               </div>
-              <div v-else class="text-h4 text-center mb-10" style="font-weight: 700">
+              <div v-else class="text-h5 text-md-h4 text-center mb-5 mb-md-10" style="font-weight: 700">
                 {{ isLoggingIn ? "Login" : "Sign up" }}
               </div>
               <v-form v-if="isForgotPasswordMode">
-                <div class="text-h6 text-center mb-4">
+                <div class="text-md-h6 text-center mb-4">
                   Please enter the email. If the email is linked to an account you'll receive an email to reset it.
                 </div>
                 <v-text-field
@@ -90,19 +125,14 @@
                 <v-btn class="float-end" color="primary" @click="lo">{{ isLoggingIn ? "Login" : "Sign up" }}</v-btn>
               </v-form>
             </v-col>
-            {{ is }}
             <v-col v-if="!isForgotPasswordMode" cols="10">
               <div v-if="isLoggingIn" class="text-center">
                 You don't have an account?
-                <span @click="SwitchingEntryForm" style="color: #21331d; cursor: pointer; font-weight: 600"
-                  >Sign up here.</span
-                >
+                <span @click="signupForm" style="color: #21331d; cursor: pointer; font-weight: 600">Sign up here.</span>
               </div>
               <div v-else class="text-center">
                 You already have an account?
-                <span @click="SwitchingEntryForm" style="color: #21331d; cursor: pointer; font-weight: 600"
-                  >Log in here.</span
-                >
+                <span @click="loginForm" style="color: #21331d; cursor: pointer; font-weight: 600">Log in here.</span>
               </div>
             </v-col>
             <v-col v-else cols="10">
@@ -119,14 +149,30 @@
 </template>
 
 <script>
+import { getAuth, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
+
 export default {
-  computed: {},
+  computed: {
+    landingBg() {
+      if (this.$vuetify.breakpoint.xs) {
+        return "BgMobile.png";
+      } else if (this.$vuetify.breakpoint.sm) {
+        return "BgIpad.png";
+      } else {
+        return "Bg1.png";
+      }
+    },
+  },
   data() {
     return {
       isLoggingIn: false,
+      isChosingSignupMode: true,
       isForgotPasswordMode: false,
       showFirstPassword: false,
       showSecondPassword: false,
+      googleProvider: null,
+      facebookProvider: null,
+      auth: null,
       valid: false,
       password: "",
       password1: "",
@@ -146,11 +192,42 @@ export default {
           }
         },
       },
+      user: null,
     };
   },
   methods: {
-    SwitchingEntryForm() {
-      this.isLoggingIn = !this.isLoggingIn;
+    SsoSignInGoogle(provider) {
+      signInWithPopup(this.auth, provider)
+        .then((result) => {
+          this.user = result.user;
+          // ...
+        })
+        .catch((error) => {
+          console.log("🚀 ~ signInGoogle ~ error", error);
+          // // Handle Errors here.
+          // const errorCode = error.code;
+          // const errorMessage = error.message;
+          // // The email of the user's account used.
+          // const email = error.customData.email;
+          // // The AuthCredential type that was used.
+          // const credential = GoogleAuthProvider.credentialFromError(error);
+          // // ...
+        });
+    },
+
+    emailSignupChosen() {
+      this.isChosingSignupMode = false;
+    },
+    returnToChosingSignUpMethod() {
+      this.isChosingSignupMode = true;
+    },
+    loginForm() {
+      this.isLoggingIn = true;
+      this.isChosingSignupMode = false;
+    },
+    signupForm() {
+      this.isLoggingIn = false;
+      this.isChosingSignupMode = true;
     },
     goBackToLogin() {
       this.isLoggingIn = true;
@@ -163,6 +240,16 @@ export default {
       this.$refs.form.validate();
     },
   },
+  created() {
+    this.googleProvider = new GoogleAuthProvider();
+    this.facebookProvider = new FacebookAuthProvider();
+    this.auth = getAuth();
+  },
+  mounted() {
+    if (this.$route.params.state !== "login") return;
+    this.isChosingSignupMode = false;
+    this.isLoggingIn = true;
+  },
 };
 </script>
 
@@ -173,5 +260,26 @@ export default {
   box-shadow: -15px 15px 0px 2px rgba(33, 51, 29, 1);
   -webkit-box-shadow: -15px 15px 0px 2px rgba(33, 51, 29, 1);
   -moz-box-shadow: -15px 15px 0px 2px rgba(33, 51, 29, 1);
+}
+.animationFadeout {
+  animation: fadeOut;
+  animation-duration: 1s;
+}
+@keyframes fadeOut {
+  from {
+    opacity: 0%;
+  }
+  to {
+    opacity: 100%;
+  }
+}
+
+.shadow {
+  border: 1px #404b3b solid;
+  border-radius: 10px;
+  box-shadow: -7.5px 7.5px 0px 2px rgba(33, 51, 29, 1);
+  -webkit-box-shadow: -7.5px 7.5px 0px 2px rgba(33, 51, 29, 1);
+  -moz-box-shadow: -7.5px 7.5px 0px 2px rgba(33, 51, 29, 1);
+  min-width: 290px !important;
 }
 </style>
