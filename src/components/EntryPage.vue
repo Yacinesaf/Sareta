@@ -49,7 +49,7 @@
               <div v-else class="text-h5 text-md-h4 text-center mb-5 mb-md-10" style="font-weight: 700">
                 {{ isLoggingIn ? "Login" : "Sign up" }}
               </div>
-              <div class="d-flex justify-center my-6">
+              <div v-if="isLoggingIn" class="d-flex justify-center my-6">
                 <v-btn class="mx-3" outlined style="height: 40px; width: 40px !important" color="primary" @click="ssoSignup(facebookProvider)"
                   ><v-icon>mdi-facebook</v-icon></v-btn
                 >
