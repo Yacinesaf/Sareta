@@ -50,10 +50,20 @@
                 {{ isLoggingIn ? "Login" : "Sign up" }}
               </div>
               <div v-if="isLoggingIn" class="d-flex justify-center my-6">
-                <v-btn class="mx-3" outlined style="height: 40px; width: 40px !important" color="primary" @click="ssoSignup(facebookProvider)"
+                <v-btn
+                  class="mx-3"
+                  outlined
+                  style="height: 40px; width: 40px !important"
+                  color="primary"
+                  @click="ssoSignup(facebookProvider)"
                   ><v-icon>mdi-facebook</v-icon></v-btn
                 >
-                <v-btn class="mx-3" outlined style="height: 40px; width: 40px !important" color="primary" @click="ssoSignup(googleProvider)"
+                <v-btn
+                  class="mx-3"
+                  outlined
+                  style="height: 40px; width: 40px !important"
+                  color="primary"
+                  @click="ssoSignup(googleProvider)"
                   ><v-icon>mdi-google</v-icon></v-btn
                 >
               </div>
@@ -278,7 +288,9 @@ export default {
       this.isForgotPasswordMode = true;
     },
     lo() {
-      this.$refs.form.validate();
+      this.$store.dispatch('user/emailSignup', { color: "primary", message: "Yay!" })
+      
+      // this.$refs.form.validate();
     },
   },
   created() {
