@@ -5,16 +5,16 @@ const getters = {
 const actions = {
   toggleSnackbar({ commit }, obj) {
     const { color, message } = obj
-    commit("showSnackbar", color, message)
+    commit("showSnackbar", {color: color, message: message})
     setTimeout(() => {
       commit("hideSnackbar")
-    }, 2500);
+    }, 3500);
   }
 };
 const mutations = {
-  showSnackbar(state, color, message) {
-    state.color = color
-    state.message = message
+  showSnackbar(state, obj) {
+    state.color = obj.color
+    state.message = obj.message
     state.value = true
 
   },

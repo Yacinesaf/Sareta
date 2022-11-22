@@ -2,9 +2,9 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Vue from 'vue';
 import router from '../src/router';
 import App from './App.vue';
-import { app } from "./firebase/firebase";
+import app from "./firebase/firebase";
 import vuetify from './plugins/vuetify';
-import store from "./store";
+import store from "./store/index";
 // import {getFirestore} from "firebase/firestore"
 
 Vue.config.productionTip = false

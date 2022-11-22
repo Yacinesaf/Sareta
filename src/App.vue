@@ -10,6 +10,7 @@
         <calculator />
       </div> -->
       <navbar />
+      <snackbar />
       <router-view style="min-height: calc(100vh - 48px)"></router-view>
     </v-main>
   </v-app>
@@ -19,12 +20,14 @@
 // import BackToHome from "./components/BackToHome.vue";
 // import Calculator from "./components/Calculator.vue";
 import Navbar from "./components/Navbar.vue";
+import Snackbar from './components/Snackbar.vue';
 export default {
   name: "App",
 
   components: {
     // Calculator,
     Navbar,
+    Snackbar,
     // BackToHome,
   },
 

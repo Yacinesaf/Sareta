@@ -1,5 +1,5 @@
 <template>
-  <v-snackbar transition="scroll-y-reverse-transition" :value="isShowed" absolute bottom centered :color="color">
+  <v-snackbar transition="scroll-y-reverse-transition" :value="isShowed" absolute bottom :color="color" >
     {{ message }}
   </v-snackbar>
 </template>

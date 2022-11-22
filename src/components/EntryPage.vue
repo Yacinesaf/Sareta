@@ -74,7 +74,7 @@
                 <v-text-field
                   :rules="isLoggingIn ? [rules.required] : [rules.required, rules.email]"
                   style="border-radius: 6px"
-                  placeholder="Email"
+                  label="Email"
                   outlined
                   :dense="$vuetify.breakpoint.xsOnly"
                 ></v-text-field>
@@ -85,7 +85,8 @@
                   :rules="[rules.required]"
                   class="pt-3"
                   style="border-radius: 6px"
-                  placeholder="Name"
+                  label="Name"
+                  type="text"
                   outlined
                   :dense="$vuetify.breakpoint.xsOnly"
                   v-show="!isLoggingIn"
@@ -93,19 +94,24 @@
                 <v-text-field
                   :rules="isLoggingIn ? [rules.required] : [rules.required, rules.email]"
                   style="border-radius: 6px"
-                  placeholder="Email"
+                  label="Email"
+                  v-model="email"
                   outlined
                 ></v-text-field>
                 <v-text-field
+                  type="number"
                   style="border-radius: 6px"
-                  placeholder="Net Income"
+                  label="Net Income"
                   outlined
+                  v-model="income"
                   :dense="$vuetify.breakpoint.xsOnly"
                   v-show="!isLoggingIn"
                 ></v-text-field>
                 <v-text-field
+                  type="number"
                   style="border-radius: 6px"
-                  placeholder="approximate tax %"
+                  label="approximate tax %"
+                  v-model="tax"
                   v-show="!isLoggingIn"
                   outlined
                   :dense="$vuetify.breakpoint.xsOnly"
@@ -122,7 +128,7 @@
                     :type="showFirstPassword ? 'text' : 'password'"
                     v-model="password"
                     style="border-radius: 6px"
-                    placeholder="Password"
+                    label="Password"
                     outlined
                     :dense="$vuetify.breakpoint.xsOnly"
                     :counter="!isLoggingIn"
@@ -143,13 +149,16 @@
                   :type="showSecondPassword ? 'text' : 'password'"
                   v-model="password1"
                   style="border-radius: 6px"
-                  placeholder="Confirm password"
+                  label="Confirm password"
                   outlined
                   :dense="$vuetify.breakpoint.xsOnly"
                   v-show="!isLoggingIn"
                   @click:append="showSecondPassword = !showSecondPassword"
                 ></v-text-field>
-                <v-btn class="float-end" color="primary" @click="lo">{{ isLoggingIn ? "Login" : "Sign up" }}</v-btn>
+                <v-btn class="float-end" color="primary" @click="isLoggingIn ? login() : signup()">{{
+                  isLoggingIn ? "Login" : "Sign up"
+                }}</v-btn>
+                <v-btn class="float-end" color="primary" @click="logout">logout</v-btn>
               </v-form>
             </v-col>
             <v-col v-if="!isForgotPasswordMode" cols="10">
@@ -210,6 +219,9 @@ export default {
       valid: false,
       password: "",
       password1: "",
+      email: "",
+      income: "",
+      tax: "",
       rules: {
         required: (value) => !!value || "Required.",
         min: (v) => v.length >= 8 || "Min 8 characters",
@@ -287,10 +299,17 @@ export default {
     forgotPasswordMode() {
       this.isForgotPasswordMode = true;
     },
-    lo() {
-      this.$store.dispatch('user/emailSignup', { color: "primary", message: "Yay!" })
-      
-      // this.$refs.form.validate();
+    login() {
+      console.log("here")
+      this.$store.dispatch("user/logIn", { email: this.email, password: this.password });
+    },
+    signup() {
+      if (this.$refs.form.validate()) {
+        this.$store.dispatch("user/emailSignup", { email: this.email, password: this.password });
+      }
+    },
+    logout() {
+      this.$store.dispatch("user/logOut");
     },
   },
   created() {
