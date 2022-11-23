@@ -32,6 +32,7 @@ const actions = {
     const auth = getAuth();
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
+        console.log("🚀 ~ .then ~ userCredential", userCredential)
         // Signed in 
         state.user = userCredential.user
         // ...

@@ -11,7 +11,12 @@ const routes = [
     component: LandingPage,
   },
   {
-    path: '/entryPage',
+    path: '/signup',
+    name: 'EntryPage',
+    component: EntryPage,
+  },
+  {
+    path: '/login',
     name: 'EntryPage',
     component: EntryPage,
   },

@@ -49,24 +49,18 @@
               <div v-else class="text-h5 text-md-h4 text-center mb-5 mb-md-10" style="font-weight: 700">
                 {{ isLoggingIn ? "Login" : "Sign up" }}
               </div>
-              <div v-if="isLoggingIn" class="d-flex justify-center my-6">
-                <v-btn
-                  class="mx-3"
-                  outlined
-                  style="height: 40px; width: 40px !important"
-                  color="primary"
-                  @click="ssoSignup(facebookProvider)"
-                  ><v-icon>mdi-facebook</v-icon></v-btn
-                >
-                <v-btn
-                  class="mx-3"
-                  outlined
-                  style="height: 40px; width: 40px !important"
-                  color="primary"
-                  @click="ssoSignup(googleProvider)"
-                  ><v-icon>mdi-google</v-icon></v-btn
-                >
-              </div>
+              <v-row v-if="isLoggingIn" justify="center" class="my-6">
+                <v-col>
+                  <v-btn outlined style="height: 40px; width: 100%" color="primary" @click="ssoSignup(facebookProvider)"
+                    ><v-icon class="mr-2">mdi-facebook</v-icon> Facebook</v-btn
+                  >
+                </v-col>
+                <v-col>
+                  <v-btn outlined style="height: 40px; width: 100%" color="primary" @click="ssoSignup(googleProvider)"
+                    ><v-icon class="mr-2">mdi-google</v-icon> Google</v-btn
+                  >
+                </v-col>
+              </v-row>
               <v-form v-if="isForgotPasswordMode">
                 <div class="text-md-h6 text-center mb-4">
                   Please enter the email. If the email is linked to an account you'll receive an email to reset it.
@@ -158,7 +152,6 @@
                 <v-btn class="float-end" color="primary" @click="isLoggingIn ? login() : signup()">{{
                   isLoggingIn ? "Login" : "Sign up"
                 }}</v-btn>
-                <v-btn class="float-end" color="primary" @click="logout">logout</v-btn>
               </v-form>
             </v-col>
             <v-col v-if="!isForgotPasswordMode" cols="10">
@@ -254,15 +247,7 @@ export default {
           // ...
         })
         .catch((error) => {
-          console.log("🚀 ~ signInGoogle ~ error", error);
-          // // Handle Errors here.
-          // const errorCode = error.code;
-          // const errorMessage = error.message;
-          // // The email of the user's account used.
-          // const email = error.customData.email;
-          // // The AuthCredential type that was used.
-          // const credential = GoogleAuthProvider.credentialFromError(error);
-          // // ...
+          this.$store.dispatch("snackbar/toggleSnackbar", { color: "red", message: error.message });
         });
     },
     getSignupFunction(method) {
@@ -300,16 +285,13 @@ export default {
       this.isForgotPasswordMode = true;
     },
     login() {
-      console.log("here")
+      console.log("here");
       this.$store.dispatch("user/logIn", { email: this.email, password: this.password });
     },
     signup() {
       if (this.$refs.form.validate()) {
         this.$store.dispatch("user/emailSignup", { email: this.email, password: this.password });
       }
-    },
-    logout() {
-      this.$store.dispatch("user/logOut");
     },
   },
   created() {
@@ -321,6 +303,13 @@ export default {
     if (this.$route.params.state !== "login") return;
     this.isChosingSignupMode = false;
     this.isLoggingIn = true;
+  },
+  watch: {
+    // isLoggingIn: function () {
+    //   if (this.isLoggingIn) {
+    //     this.$router.push("/entry");
+    //   }
+    // },
   },
 };
 </script>
