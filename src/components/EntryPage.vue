@@ -157,11 +157,15 @@
             <v-col v-if="!isForgotPasswordMode" cols="10">
               <div v-if="isLoggingIn" class="text-center">
                 You don't have an account?
-                <span @click="signupForm" style="color: #21331d; cursor: pointer; font-weight: 600">Sign up here.</span>
+                <span @click="toggleSignupForm" style="color: #21331d; cursor: pointer; font-weight: 600"
+                  >Sign up here.</span
+                >
               </div>
               <div v-else class="text-center">
                 You already have an account?
-                <span @click="loginForm" style="color: #21331d; cursor: pointer; font-weight: 600">Log in here.</span>
+                <span @click="toggleLoginForm" style="color: #21331d; cursor: pointer; font-weight: 600"
+                  >Log in here.</span
+                >
               </div>
             </v-col>
             <v-col v-else cols="10">
@@ -269,11 +273,12 @@ export default {
     returnToChosingSignUpMethod() {
       this.isChosingSignupMode = true;
     },
-    loginForm() {
+    toggleLoginForm() {
       this.isLoggingIn = true;
       this.isChosingSignupMode = false;
+      this.$router.push("/login");
     },
-    signupForm() {
+    toggleSignupForm() {
       this.isLoggingIn = false;
       this.isChosingSignupMode = true;
     },
@@ -305,11 +310,13 @@ export default {
     this.isLoggingIn = true;
   },
   watch: {
-    // isLoggingIn: function () {
-    //   if (this.isLoggingIn) {
-    //     this.$router.push("/entry");
-    //   }
-    // },
+    isLoggingIn: function () {
+      if (this.isLoggingIn) {
+        this.$router.push("/login");
+      } else {
+        this.$router.push("/signup");
+      }
+    },
   },
 };
 </script>

@@ -5,14 +5,13 @@ const getters = {
 
 };
 const actions = {
-  emailSignup({ state, dispatch }, obj) {
+  emailSignup({ dispatch, commit }, obj) {
     const { email, password } = obj
     const auth = getAuth();
-    createUserWithEmailAndPassword(auth, email, password)
+    return createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in 
-        dispatch('snackbar/toggleSnackbar', { color: "green", message: "yay!" }, { root: true })
-        state.user = userCredential.user
+        commit("setUser", userCredential.user)
       })
       .catch((error) => {
         dispatch('snackbar/toggleSnackbar', { color: "red", message: error.message }, { root: true })
@@ -27,23 +26,24 @@ const actions = {
       // An error happened.
     });
   },
-  logIn({ state }, obj) {
+  logIn({ commit, dispatch }, obj) {
     const { email, password } = obj
     const auth = getAuth();
-    signInWithEmailAndPassword(auth, email, password)
+    return signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        console.log("🚀 ~ .then ~ userCredential", userCredential)
         // Signed in 
-        state.user = userCredential.user
+        commit("setUser", userCredential.user)
         // ...
       })
       .catch((error) => {
-        console.log("🚀 ~ logIn ~ error", error)
+        dispatch('snackbar/toggleSnackbar', { color: "red", message: error.message }, { root: true })
       });
   }
 };
 const mutations = {
-
+  setUser(state, user) {
+    state.user = user
+  }
 };
 export default {
   namespaced: true,
