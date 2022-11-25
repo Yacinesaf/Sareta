@@ -11,12 +11,14 @@
       </div> -->
       <navbar />
       <snackbar />
+      <info-snackbar />
       <router-view style="min-height: calc(100vh - 48px)"></router-view>
     </v-main>
   </v-app>
 </template>
 
 <script>
+import InfoSnackbar from './components/InfoSnackbar.vue';
 // import BackToHome from "./components/BackToHome.vue";
 // import Calculator from "./components/Calculator.vue";
 import Navbar from "./components/Navbar.vue";
@@ -28,6 +30,7 @@ export default {
     // Calculator,
     Navbar,
     Snackbar,
+    InfoSnackbar,
     // BackToHome,
   },
 
