@@ -1,12 +1,8 @@
 <template>
-  <v-snackbar max-width="250px" timeout="-1" color="orange" bottom right :value="isInfoSnackbarShown" vertical>
-    <template v-slot:default>
-      <div>
-        <v-btn class="float-right" color="indigo" text v-bind="attrs" @click="closeInfoSnackbar">
-          <v-icon>mdi-close</v-icon>
-        </v-btn>
-        <div>Go to settings to finish your registration and get the full experience of the app</div>
-      </div>
+  <v-snackbar max-width="270px" timeout="-1" color="orange" bottom right :value="isInfoSnackbarShown" vertical>
+    Go to settings to finish your registration and get the full experience of the app
+    <template v-slot:action="{ attrs }">
+      <v-btn  text v-bind="attrs" @click="closeInfoSnackbar"> Close </v-btn>
     </template>
   </v-snackbar>
 </template>

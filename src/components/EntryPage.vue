@@ -92,24 +92,6 @@
                   v-model="email"
                   outlined
                 ></v-text-field>
-                <v-text-field
-                  type="number"
-                  style="border-radius: 6px"
-                  label="Net Income"
-                  outlined
-                  v-model="income"
-                  :dense="$vuetify.breakpoint.xsOnly"
-                  v-show="!isLoggingIn"
-                ></v-text-field>
-                <v-text-field
-                  type="number"
-                  style="border-radius: 6px"
-                  label="approximate tax %"
-                  v-model="tax"
-                  v-show="!isLoggingIn"
-                  outlined
-                  :dense="$vuetify.breakpoint.xsOnly"
-                ></v-text-field>
                 <div
                   :class="{
                     'mb-4': isLoggingIn,
