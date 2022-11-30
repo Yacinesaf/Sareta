@@ -120,7 +120,7 @@
                   </div>
                 </div>
                 <v-text-field
-                  :rules="[rules.required, rules.matchingPasswords]"
+                  :rules="[rules.required, matchingPasswords]"
                   :append-icon="showSecondPassword ? 'mdi-eye' : 'mdi-eye-off'"
                   :type="showSecondPassword ? 'text' : 'password'"
                   v-model="password1"
@@ -165,7 +165,7 @@
 
 <script>
 import { getAuth, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
-
+import rules from "../rules/rules";
 export default {
   computed: {
     landingBg() {
@@ -184,6 +184,9 @@ export default {
         return "310px";
       }
     },
+    rules() {
+      return rules;
+    },
   },
   data() {
     return {
@@ -201,21 +204,12 @@ export default {
       email: "",
       income: "",
       tax: "",
-      rules: {
-        required: (value) => !!value || "Required.",
-        min: (v) => v.length >= 8 || "Min 8 characters",
-        email: (value) => {
-          const pattern =
-            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-          return pattern.test(value) || "Invalid e-mail.";
-        },
-        matchingPasswords: () => {
-          if (this.password === this.password1) {
-            return true;
-          } else {
-            return "Passwords do not match.";
-          }
-        },
+      matchingPasswords: () => {
+        if (this.password === this.password1) {
+          return true;
+        } else {
+          return "Passwords do not match.";
+        }
       },
       signupBtns: [
         { text: "Facebook", icon: "facebook" },
@@ -277,7 +271,7 @@ export default {
     },
     signup() {
       if (this.$refs.form.validate()) {
-        this.$store.dispatch("user/emailSignup", { email: this.email, password: this.password });
+        this.$store.dispatch("user/emailSignup", { email: this.email, password: this.password, name: this.name });
       }
     },
   },

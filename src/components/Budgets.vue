@@ -12,7 +12,7 @@
           <budget-card :img="budget.img" :name="budget.name" :description="budget.description" :date="budget.date" />
         </v-col>
         <v-col v-if="data" cols="12" md="6" lg="3" xl="2">
-          <v-dialog v-model="dialog" width="500">
+          <v-dialog transition="scroll-y-reverse-transition" v-model="dialog" width="500">
             <template v-slot:activator="{ on, attrs }">
               <v-btn
                 v-on="on"
@@ -24,16 +24,29 @@
                 ><v-icon size="70">mdi-plus</v-icon>
               </v-btn>
             </template>
-            <v-form>
-              <v-text-field
-                :rules="isLoggingIn ? [rules.required] : [rules.required, rules.email]"
-                style="border-radius: 6px"
-                label="Budget name"
-                v-model="BudgetName"
-                outlined
-              ></v-text-field>
-              
-            </v-form>
+            <v-card>
+              <div class="pa-6">
+                <div class="text-h5 pb-6" style="font-weight: 600">Add new budget</div>
+                <v-form>
+                  <v-text-field
+                    :rules="rules.required"
+                    style="border-radius: 6px"
+                    label="Budget name"
+                    v-model="BudgetName"
+                    outlined
+                  ></v-text-field>
+                  <v-text-field
+                    style="border-radius: 6px"
+                    label="Description"
+                    v-model="description"
+                    outlined
+                  ></v-text-field>
+                  <div class="d-flex justify-end">
+                    <v-btn color="primary" @click="createBudget">Create</v-btn>
+                  </div>
+                </v-form>
+              </div>
+            </v-card>
           </v-dialog>
         </v-col>
       </v-row>
@@ -58,10 +71,18 @@
 </template>
 
 <script>
+import rules from "../rules/rules";
+
 import BudgetCard from "./BudgetCard.vue";
 import { getBudgetCardImage } from "../api/endpoints";
 export default {
   components: { BudgetCard },
+  computed: {
+    rules() {
+      console.log("🚀 ~ rules ~ rules", rules);
+      return rules;
+    },
+  },
   data() {
     return {
       data: [
@@ -102,7 +123,12 @@ export default {
           img: "https://images.unsplash.com/photo-1669279594631-401ecc3883d5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1974&q=80",
         },
       ],
+      description: "",
+      budgetName: "",
     };
+  },
+  methods: {
+    createBudget() {},
   },
   created() {
     getBudgetCardImage().then((res) => {

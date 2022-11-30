@@ -1,5 +1,5 @@
 <template>
-  <v-card class="rounded-lg">
+  <v-card style="cursor: pointer" class="rounded-lg">
     <v-img :src="img" height="200px"></v-img>
     <v-card-title>
       <div class="text-h6" style="font-weight: 700; color: #21331d">{{ name }}</div>
