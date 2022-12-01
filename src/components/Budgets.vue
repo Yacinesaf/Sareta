@@ -1,12 +1,12 @@
 <template>
-  <div class="pa-6">
-    <div v-if="data" class="text-h3 text-center py-6" style="font-weight: 700">Your spending sheets</div>
+  <div class="pa-3 pa-md-6">
+    <div v-if="data" class="text-h5 text-md-h3 text-center py-6" style="font-weight: 700">Your spending sheets</div>
     <v-row v-if="isLoadingBudgets">
       <v-col :key="i" v-for="i in Array.from(Array(8).keys())" cols="12" md="6" lg="3" xl="2">
         <v-skeleton-loader width="100%" v-bind="attrs" type="image"></v-skeleton-loader>
       </v-col>
     </v-row>
-    <v-row class="pt-6" v-else align="center" justify="center">
+    <v-row class="pt-6 mx-0" v-else align="center" justify="center">
       <v-row v-if="data" class="ma-0">
         <v-col :key="i" v-for="(budget, i) in data" cols="12" md="6" lg="3" xl="2">
           <budget-card :img="budget.img" :name="budget.name" :description="budget.description" :date="budget.date" />
@@ -90,37 +90,37 @@ export default {
           name: "2022 spending",
           description: "ooo",
           date: "12/12/12",
-          img: "https://images.unsplash.com/photo-1669279594631-401ecc3883d5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1974&q=80",
+          img: "https://images.unsplash.com/photo-1669623313981-6af02eedb15c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1932&q=80",
         },
         {
           name: "2022 spending",
           description: "ooo",
           date: "12/12/12",
-          img: "https://images.unsplash.com/photo-1669279594631-401ecc3883d5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1974&q=80",
+          img: "https://images.unsplash.com/photo-1669623313981-6af02eedb15c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1932&q=80",
         },
         {
           name: "2022 spending",
           description: "ooo",
           date: "12/12/12",
-          img: "https://images.unsplash.com/photo-1669279594631-401ecc3883d5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1974&q=80",
+          img: "https://images.unsplash.com/photo-1669623313981-6af02eedb15c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1932&q=80",
         },
         {
           name: "2022 spending",
           description: "ooo",
           date: "12/12/12",
-          img: "https://images.unsplash.com/photo-1669279594631-401ecc3883d5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1974&q=80",
+          img: "https://images.unsplash.com/photo-1669623313981-6af02eedb15c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1932&q=80",
         },
         {
           name: "2022 spending",
           description: "ooo",
           date: "12/12/12",
-          img: "https://images.unsplash.com/photo-1669279594631-401ecc3883d5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1974&q=80",
+          img: "https://images.unsplash.com/photo-1669623313981-6af02eedb15c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1932&q=80",
         },
         {
           name: "2022 spending",
           description: "ooo",
           date: "12/12/12",
-          img: "https://images.unsplash.com/photo-1669279594631-401ecc3883d5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1974&q=80",
+          img: "https://images.unsplash.com/photo-1669623313981-6af02eedb15c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1932&q=80",
         },
       ],
       description: "",
