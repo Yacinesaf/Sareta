@@ -223,7 +223,8 @@ export default {
     ssoSignup(provider) {
       signInWithPopup(this.auth, provider)
         .then((result) => {
-          this.user = result.user;
+          console.log("🚀 ~ .then ~ result", result)
+          // this.user = result.user;
           // ...
         })
         .catch((error) => {
