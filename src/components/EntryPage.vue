@@ -224,7 +224,7 @@ export default {
       signInWithPopup(this.auth, provider)
         .then((result) => {
           console.log("🚀 ~ .then ~ result", result)
-          // this.user = result.user;
+          this.user = result.user;
           // ...
         })
         .catch((error) => {
