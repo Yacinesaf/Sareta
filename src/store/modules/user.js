@@ -1,4 +1,5 @@
 import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { checkIfUserExist } from "../../api/endpoints";
 const state = { user: null };
 const getters = {
 
@@ -10,6 +11,7 @@ const actions = {
     return createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         console.log("🚀 ~ .then ~ userCredential", userCredential)
+        console.log(checkIfUserExist(userCredential.user.uid))
         commit("setUser", userCredential.user)
       })
       .catch((error) => {
