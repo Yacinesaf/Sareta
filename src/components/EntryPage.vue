@@ -80,6 +80,7 @@
                   class="pt-3"
                   style="border-radius: 6px"
                   label="Name"
+                  v-model="name"
                   type="text"
                   outlined
                   :dense="$vuetify.breakpoint.xsOnly"
@@ -166,6 +167,7 @@
 <script>
 import { getAuth, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
 import rules from "../rules/rules";
+import { addUserDoc } from "../api/endpoints";
 export default {
   computed: {
     landingBg() {
@@ -202,8 +204,7 @@ export default {
       password: "",
       password1: "",
       email: "",
-      income: "",
-      tax: "",
+      name: "",
       matchingPasswords: () => {
         if (this.password === this.password1) {
           return true;
@@ -222,10 +223,10 @@ export default {
   methods: {
     ssoSignup(provider) {
       signInWithPopup(this.auth, provider)
-        .then((result) => {
-          console.log("🚀 ~ .then ~ result", result)
-          this.user = result.user;
-          // ...
+        .then(async (result) => {
+          await addUserDoc({ name: result.user.displayName, id: result.user.uid });
+          this.$store.commit("user/setUser");
+          this.$router.push("/budgets")
         })
         .catch((error) => {
           this.$store.dispatch("snackbar/toggleSnackbar", { color: "red", message: error.message });
@@ -269,10 +270,12 @@ export default {
     login() {
       console.log("here");
       this.$store.dispatch("user/logIn", { email: this.email, password: this.password });
+      this.$router.push("/budgets")
     },
     signup() {
       if (this.$refs.form.validate()) {
         this.$store.dispatch("user/emailSignup", { email: this.email, password: this.password, name: this.name });
+        this.$router.push("/budgets")
       }
     },
   },

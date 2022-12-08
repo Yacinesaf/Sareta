@@ -1,17 +1,16 @@
 import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { checkIfUserExist } from "../../api/endpoints";
+import { addUserDoc } from "../../api/endpoints";
 const state = { user: null };
 const getters = {
 
 };
 const actions = {
   emailSignup({ dispatch, commit }, obj) {
-    const { email, password } = obj
+    const { email, password, name } = obj
     const auth = getAuth();
     return createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        console.log("🚀 ~ .then ~ userCredential", userCredential)
-        console.log(checkIfUserExist(userCredential.user.uid))
+      .then(async (userCredential) => {
+        await addUserDoc({ name: name, id: userCredential.user.uid })
         commit("setUser", userCredential.user)
       })
       .catch((error) => {

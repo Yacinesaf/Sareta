@@ -7,24 +7,33 @@ function getBudgetCardImage() {
   return axios.get("https://api.unsplash.com/photos/random?client_id=8H2mV-XceZaObYIHpzH1IqKP7UquA2wiYoS5qz8CnQE&query=finance,money,budget,accounting")
     .then(res => res.data.urls.regular)
 }
-function checkIfUserExist(id) {
-  db.collection("users").get().then((querySnapshot) => {
+async function addUserDoc(userObj) {
+  await db.collection("users").get().then((querySnapshot) => {
     let result;
     querySnapshot.forEach((doc) => {
-      result = doc.data().uid === id
+      result = doc.data().uid === userObj.id
     })
-    console.log("🚀  querySnapshot.forEach  result", result)
-    return result
+    if (result) return
+    addUserInDb(userObj)
   });
 }
-// async function checkIfUserExist(id) {
-//   await db.collection('users').get().then(doc => {
-//     return doc.map(doc => doc.data());
-//   })
-// }
+function addUserInDb(userObj) {
+  return db.collection("users").add({
+    name: userObj.name,
+    uId: userObj.id,
+    dontShowAlertAgain: false
+  })
+    .then((docRef) => {
+      console.log("Document written with ID: ", docRef.id);
+    })
+    .catch((error) => {
+      console.error("Error adding document: ", error);
+    });
+}
+
 
 export {
   getBudgetCardImage,
-  checkIfUserExist
+  addUserDoc
 };
 
