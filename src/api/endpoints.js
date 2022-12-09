@@ -30,10 +30,34 @@ function addUserInDb(userObj) {
       console.error("Error adding document: ", error);
     });
 }
+function addBudget(obj) {
+  db.collection("budgets").add({
+    name: obj.name,
+    uId: obj.id,
+    description: obj.description,
+  })
+    .then((docRef) => {
+      db.collection("budgets").doc(docRef.id).set({
+        docId: docRef.id
+      })
+    })
+    .catch((error) => {
+      console.error("Error adding document: ", error);
+    });
+}
+function deleteBudget(budgetDocId) {
+  db.collection("cities").doc(budgetDocId).delete().then(() => {
+    console.log("Document successfully deleted!");
+}).catch((error) => {
+    console.error("Error removing document: ", error);
+});
+}
 
 
 export {
   getBudgetCardImage,
-  addUserDoc
+  addUserDoc,
+  addBudget,
+  deleteBudget
 };
 
