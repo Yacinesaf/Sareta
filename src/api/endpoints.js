@@ -52,12 +52,25 @@ function deleteBudget(budgetDocId) {
     console.error("Error removing document: ", error);
 });
 }
+function editBudget(obj){
+  db.collection("budgets").doc(obj.docId).set({
+    name: obj.name,
+    uId: obj.id,
+    description: obj.description,
+  })
+    .then(() => {
+    })
+    .catch((error) => {
+      console.error("Error adding document: ", error);
+    });
+}
 
 
 export {
   getBudgetCardImage,
   addUserDoc,
   addBudget,
-  deleteBudget
+  deleteBudget,
+  editBudget,
 };
 

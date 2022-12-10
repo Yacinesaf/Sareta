@@ -8,6 +8,7 @@ const actions = {
   emailSignup({ dispatch, commit }, obj) {
     const { email, password, name } = obj
     const auth = getAuth();
+    //change then to awaits
     return createUserWithEmailAndPassword(auth, email, password)
       .then(async (userCredential) => {
         await addUserDoc({ name: name, id: userCredential.user.uid })
