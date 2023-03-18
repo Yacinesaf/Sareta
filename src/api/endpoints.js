@@ -4,8 +4,8 @@ import firebase from "../firebase/firebase";
 const db = firebase.firestore();
 
 function getBudgetCardImage() {
-  return axios.get("https://api.unsplash.com/photos/random?client_id=8H2mV-XceZaObYIHpzH1IqKP7UquA2wiYoS5qz8CnQE&query=finance,money,budget,accounting")
-    .then(res => res.data.urls.regular)
+  return axios.get("https://api.unsplash.com/photos/random?client_id=8H2mV-XceZaObYIHpzH1IqKP7UquA2wiYoS5qz8CnQE&orientation=landscape&query=finance,accounting")
+    .then(res => {console.log(res); return res.data.urls.regular})
 }
 async function addUserDoc(userObj) {
   await db.collection("users").get().then((querySnapshot) => {
@@ -24,20 +24,16 @@ function addUserInDb(userObj) {
     dontShowAlertAgain: false
   })
     .then((docRef) => {
-      console.log("Document written with ID: ", docRef.id);
+      docRef
     })
     .catch((error) => {
       console.error("Error adding document: ", error);
     });
 }
-function addBudget(obj) {
-  db.collection("budgets").add({
-    name: obj.name,
-    uId: obj.id,
-    description: obj.description,
-  })
+function createBudget(obj) {
+  return db.collection("budgets").add(obj)
     .then((docRef) => {
-      db.collection("budgets").doc(docRef.id).set({
+      db.collection("budgets").doc(docRef.id).update({
         docId: docRef.id
       })
     })
@@ -46,13 +42,9 @@ function addBudget(obj) {
     });
 }
 function deleteBudget(budgetDocId) {
-  db.collection("cities").doc(budgetDocId).delete().then(() => {
-    console.log("Document successfully deleted!");
-}).catch((error) => {
-    console.error("Error removing document: ", error);
-});
+  return db.collection("budgets").doc(budgetDocId).delete();
 }
-function editBudget(obj){
+function editBudget(obj) {
   db.collection("budgets").doc(obj.docId).set({
     name: obj.name,
     uId: obj.id,
@@ -64,13 +56,27 @@ function editBudget(obj){
       console.error("Error adding document: ", error);
     });
 }
-
+function getAllBudgets(userId) {
+  const budgets = []
+  return db.collection("budgets").where("uId", "==", userId)
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        budgets.push(doc.data())
+      });
+      return budgets
+    })
+    .catch((error) => {
+      console.log("Error getting documents: ", error);
+    });
+}
 
 export {
   getBudgetCardImage,
   addUserDoc,
-  addBudget,
+  createBudget,
   deleteBudget,
   editBudget,
+  getAllBudgets
 };
 

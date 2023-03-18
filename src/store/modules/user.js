@@ -19,12 +19,12 @@ const actions = {
         // ..
       });
   },
-  logOut() {
+  logOut({ dispatch, commit }) {
     const auth = getAuth();
-    signOut(auth).then(() => {
-      // Sign-out successful.
-    }).catch(() => {
-      // An error happened.
+    return signOut(auth).then(() => {
+      commit("resetUser")
+    }).catch((error) => {
+      dispatch('snackbar/toggleSnackbar', { color: "red", message: error.message }, { root: true })
     });
   },
   logIn({ commit, dispatch }, obj) {
@@ -44,6 +44,9 @@ const actions = {
 const mutations = {
   setUser(state, user) {
     state.user = user
+  },
+  resetUser(state) {
+    state.user = null
   }
 };
 export default {

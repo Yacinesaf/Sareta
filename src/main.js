@@ -18,5 +18,13 @@ firebase.auth().onAuthStateChanged((user) => {
       render: h => h(App)
     }).$mount('#app')
   }
-  app.$store.commit("user/setUser", user)
+  if (user?.uid) {
+    const userObj = {
+      displayName: user.displayName,
+      email: user.email,
+      uid: user.uid,
+    }
+    app.$store.commit("user/setUser", userObj)
+  }
+  
 })

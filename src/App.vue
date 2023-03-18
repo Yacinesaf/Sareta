@@ -3,7 +3,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
-    <v-main>
+    <div
+      style="height: 100vh; display: flex; justify-content: center; align-items: center"
+      v-if="requiresAuth && !user"
+    >
+      <v-progress-circular indeterminate size="60" width="6" color="primary"></v-progress-circular>
+    </div>
+    <v-main v-else>
       <!-- 
       <div class="mt-6">
         <back-to-home />
@@ -12,17 +18,18 @@
       <navbar />
       <snackbar />
       <info-snackbar />
-      <router-view style="min-height: calc(100vh - 48px)"></router-view>
+      <router-view style="min-height: calc(100vh - 64px)"></router-view>
     </v-main>
   </v-app>
 </template>
 
 <script>
-import InfoSnackbar from './components/InfoSnackbar.vue';
+import { mapState } from "vuex";
+import InfoSnackbar from "./components/InfoSnackbar.vue";
 // import BackToHome from "./components/BackToHome.vue";
 // import Calculator from "./components/Calculator.vue";
 import Navbar from "./components/Navbar.vue";
-import Snackbar from './components/Snackbar.vue';
+import Snackbar from "./components/Snackbar.vue";
 export default {
   name: "App",
 
@@ -33,10 +40,18 @@ export default {
     InfoSnackbar,
     // BackToHome,
   },
-
+  computed: {
+    ...mapState({
+      user: (state) => state.user.user?.uid,
+    }),
+    requiresAuth() {
+      return this.$route.meta.requiresAuth;
+    },
+  },
   data: () => ({
     //
   }),
+
 };
 </script>
 

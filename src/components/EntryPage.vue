@@ -6,7 +6,7 @@
       backgroundPosition: 'center',
     }"
     class="d-flex justify-center px-3 animationFadeout"
-    style="align-items: center; min-height: calc(100vh - 48px)"
+    style="align-items: center; min-height: calc(100vh - 64px)"
   >
     <v-row justify="center">
       <v-col class="px-0 entryCard animationFadeout" cols="10" sm="9" md="6" lg="4" xl="3">
@@ -223,10 +223,14 @@ export default {
   methods: {
     ssoSignup(provider) {
       signInWithPopup(this.auth, provider)
-        .then(async (result) => {
-          await addUserDoc({ name: result.user.displayName, id: result.user.uid });
-          this.$store.commit("user/setUser");
-          this.$router.push("/budgets")
+        .then((result) => {
+          addUserDoc({ name: result.user.displayName, id: result.user.uid });
+          this.$store.commit("user/setUser", {
+            displayName: result.user.displayName,
+            email: result.user.email,
+            uid: result.user.uid,
+          });
+          this.$router.push("/budgets");
         })
         .catch((error) => {
           this.$store.dispatch("snackbar/toggleSnackbar", { color: "red", message: error.message });
@@ -268,14 +272,13 @@ export default {
       this.isForgotPasswordMode = true;
     },
     login() {
-      console.log("here");
       this.$store.dispatch("user/logIn", { email: this.email, password: this.password });
-      this.$router.push("/budgets")
+      this.$router.push("/budgets");
     },
     signup() {
       if (this.$refs.form.validate()) {
         this.$store.dispatch("user/emailSignup", { email: this.email, password: this.password, name: this.name });
-        this.$router.push("/budgets")
+        this.$router.push("/budgets");
       }
     },
   },
