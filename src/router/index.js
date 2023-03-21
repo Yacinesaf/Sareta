@@ -1,7 +1,8 @@
+import BudgetManager from '@/components/BudgetManager';
 import Budgets from '@/components/Budgets';
-import Calculator from '@/components/Calculator';
 import EntryPage from '@/components/EntryPage';
 import LandingPage from '@/components/LandingPage';
+import Profile from '@/components/Profile';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import firebase from '../firebase/firebase';
@@ -17,11 +18,11 @@ const routes = [
   },
   {
     meta: {
-      requireGuest: true
+      requiresAuth: true
     },
-    path: '/calculator',
-    name: 'Calculator',
-    component: Calculator,
+    path: '/budgetManager/:id',
+    name: 'BudgetManager',
+    component: BudgetManager,
   },
   {
     meta: {
@@ -38,6 +39,14 @@ const routes = [
     path: '/budgets',
     name: 'Budgets',
     component: Budgets,
+  },
+  {
+    meta: {
+      requiresAuth: true
+    },
+    path: '/profile',
+    name: 'Profile',
+    component: Profile,
   },
   {
     path: '/',

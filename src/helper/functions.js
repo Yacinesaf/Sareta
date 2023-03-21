@@ -8,8 +8,14 @@ function dateFormater(timestamp) {
   var day = date.getDay();
   return `${day < 10 ? '0' + day : day}/${month < 10 ? '0' + month : month}/${year}`;
 }
-
+function initials(user){
+  const splitedName = user.displayName.split(" ");
+  const firstNameInitial = splitedName[0].split("")[0];
+  const lastNameInitial = splitedName[1].split("")[0];
+  return firstNameInitial.toUpperCase() + lastNameInitial.toUpperCase();
+}
 export {
   currencyForamter,
-  dateFormater
+  dateFormater,
+  initials
 };

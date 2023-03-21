@@ -167,9 +167,13 @@
 <script>
 import { getAuth, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
 import rules from "../rules/rules";
-import { addUserDoc } from "../api/endpoints";
+import { createUser } from "../api/endpoints";
+import { mapState } from "vuex";
 export default {
   computed: {
+    ...mapState({
+      infoSnackbar: (state) => state.general.moreInfoSnackbar,
+    }),
     landingBg() {
       if (this.$vuetify.breakpoint.xs) {
         return "BgMobile.png";
@@ -224,7 +228,12 @@ export default {
     ssoSignup(provider) {
       signInWithPopup(this.auth, provider)
         .then((result) => {
-          addUserDoc({ name: result.user.displayName, id: result.user.uid });
+          createUser({
+            id: result.user.uid,
+            infoSnackbar: this.infoSnackbar,
+            displayName: result.user.displayName,
+            email: result.user.email,
+          });
           this.$store.commit("user/setUser", {
             displayName: result.user.displayName,
             email: result.user.email,

@@ -1,8 +1,10 @@
 const state = { moreInfoSnackbar: true };
 const getters = {
+  userId: (state, getters, rootState) => {
+    return rootState.user.user.uid
+  }
 };
 const actions = {
-
 };
 const mutations = {
   closeMoreInfoSnackbar(state) {

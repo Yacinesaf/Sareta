@@ -1,17 +1,25 @@
 import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { addUserDoc } from "../../api/endpoints";
+import { createUser } from "../../api/endpoints";
 const state = { user: null };
 const getters = {
-
+  infoSnackbar: (state, getters, rootState) => {
+    return rootState.general.moreInfoSnackbar
+  }
+  
 };
 const actions = {
-  emailSignup({ dispatch, commit }, obj) {
+  emailSignup({ dispatch, commit, getters }, obj) {
     const { email, password, name } = obj
     const auth = getAuth();
     //change then to awaits
     return createUserWithEmailAndPassword(auth, email, password)
       .then(async (userCredential) => {
-        await addUserDoc({ name: name, id: userCredential.user.uid })
+        await createUser({
+          firebaseAuthUserUID: userCredential.user.uid,
+          infoSnackbar: getters.infoSnackbar,
+          displayName: name,
+          email: email,
+        })
         commit("setUser", userCredential.user)
       })
       .catch((error) => {
@@ -47,6 +55,9 @@ const mutations = {
   },
   resetUser(state) {
     state.user = null
+  },
+  closeMoreInfoSnackbar(state) {
+    state.moreInfoSnackbar = false;
   }
 };
 export default {

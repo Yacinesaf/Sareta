@@ -25,11 +25,17 @@
 
 <script>
 import { mapState } from "vuex";
+import { initials } from "../helper/functions";
 export default {
   computed: {
     ...mapState({
       user: (state) => state.user.user,
     }),
+  },
+  data() {
+    return {
+      initials: initials,
+    };
   },
   methods: {
     goLogin() {
@@ -37,12 +43,6 @@ export default {
     },
     goHome() {
       this.$router.push({ name: "LandingPage" });
-    },
-    initials(user) {
-      let splitedName = user.displayName.split(" ");
-      let firstNameInitial = splitedName[0].split("")[0];
-      let lastNameInitial = splitedName[1].split("")[0];
-      return firstNameInitial.toUpperCase() + lastNameInitial.toUpperCase();
     },
     async logOut() {
       await this.$store.dispatch("user/logOut");

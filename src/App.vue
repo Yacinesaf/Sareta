@@ -10,11 +10,6 @@
       <v-progress-circular indeterminate size="60" width="6" color="primary"></v-progress-circular>
     </div>
     <v-main v-else>
-      <!-- 
-      <div class="mt-6">
-        <back-to-home />
-        <calculator />
-      </div> -->
       <navbar />
       <snackbar />
       <info-snackbar />
@@ -26,19 +21,15 @@
 <script>
 import { mapState } from "vuex";
 import InfoSnackbar from "./components/InfoSnackbar.vue";
-// import BackToHome from "./components/BackToHome.vue";
-// import Calculator from "./components/Calculator.vue";
 import Navbar from "./components/Navbar.vue";
 import Snackbar from "./components/Snackbar.vue";
 export default {
   name: "App",
 
   components: {
-    // Calculator,
     Navbar,
     Snackbar,
     InfoSnackbar,
-    // BackToHome,
   },
   computed: {
     ...mapState({

@@ -8,7 +8,15 @@
     </v-row>
     <v-row class="pt-6 mx-0" v-else align="center" justify="center">
       <v-row class="ma-0">
-        <v-col :key="i" v-for="(budget, i) in budgets" cols="12" md="6" lg="3" xl="2">
+        <v-col
+          @click="goToBudgetManager(budget)"
+          :key="i"
+          v-for="(budget, i) in budgets"
+          cols="12"
+          md="6"
+          lg="3"
+          xl="2"
+        >
           <budget-card @deleteBudget="deleteBudget" :budget="budget" />
         </v-col>
         <v-col v-if="areBudgetsPopulated" cols="12" md="6" lg="3" xl="2">
@@ -69,6 +77,7 @@ import rules from "../rules/rules";
 
 import BudgetCard from "./BudgetCard.vue";
 import { mapState } from "vuex";
+import {getUser} from "../api/endpoints"
 export default {
   components: { BudgetCard },
   computed: {
@@ -113,8 +122,12 @@ export default {
     deleteBudget(docId) {
       this.$store.dispatch("budgets/deleteBudgetAction", docId);
     },
+    goToBudgetManager(budget) {
+      this.$router.push({ name: "BudgetManager", params: { budget: budget, id: budget.docId } });
+    },
   },
   mounted() {
+    getUser(this.userId)
     this.isLoadingBudgets = true;
     this.$store.dispatch("budgets/getBudgets").then(() => {
       this.isLoadingBudgets = false;
