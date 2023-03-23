@@ -1,11 +1,23 @@
 import axios from "axios";
+import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import 'firebase/compat/firestore';
 import firebase from "../firebase/firebase";
 const db = firebase.firestore();
+const auth = getAuth();
+const user = firebase.auth().currentUser;
 
 function getBudgetCardImage() {
   return axios.get("https://api.unsplash.com/photos/random?client_id=8H2mV-XceZaObYIHpzH1IqKP7UquA2wiYoS5qz8CnQE&orientation=landscape&query=finance,accounting")
     .then(res => { console.log(res); return res.data.urls.regular })
+}
+function createUserWithEmail(email, password) {
+  return createUserWithEmailAndPassword(auth, email, password)
+}
+function userSignIn(email, password) {
+  return signInWithEmailAndPassword(auth, email, password)
+}
+function signout() {
+  return signOut(auth)
 }
 function createUser(userObj) {
   return db.collection("users").add({
@@ -56,14 +68,22 @@ function getAllBudgets(userId) {
     });
 }
 function getUser(userId) {
-  db.collection("users").where("firebaseAuthUserUID", "==", userId).get()
-    .then((querySnapshot) => {
-      const result = []
-      querySnapshot.forEach((doc) => {
-        result.push({ ...doc.data(), docId: doc.id })
-      });
-    })
+  return db.collection("users").where("firebaseAuthUserUID", "==", userId).get()
 
+}
+function editUserName(name) {
+  return user.updateProfile({
+    displayName: name,
+  })
+}
+function editUserEmail(email) {
+  return user.updateEmail(email)
+}
+function editUserPassword(newPassword) {
+  return user.updatePassword(newPassword)
+}
+function sendResetPasswordEmail(email) {
+  return firebase.auth().sendPasswordResetEmail(email)
 }
 
 export {
@@ -73,6 +93,13 @@ export {
   deleteBudget,
   editBudget,
   getAllBudgets,
-  getUser
+  getUser,
+  editUserName,
+  editUserEmail,
+  editUserPassword,
+  sendResetPasswordEmail,
+  createUserWithEmail,
+  userSignIn,
+  signout,
 };
 

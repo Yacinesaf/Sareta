@@ -24,7 +24,7 @@ firebase.auth().onAuthStateChanged((user) => {
       email: user.email,
       uid: user.uid,
     }
-    app.$store.commit("user/setUser", userObj)
+    app.$store.commit("user/setAuthUser", userObj)
   }
   
 })

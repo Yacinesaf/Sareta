@@ -5,7 +5,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
     <div
       style="height: 100vh; display: flex; justify-content: center; align-items: center"
-      v-if="requiresAuth && !user"
+      v-if="requiresAuth && !authUser"
     >
       <v-progress-circular indeterminate size="60" width="6" color="primary"></v-progress-circular>
     </div>
@@ -33,7 +33,7 @@ export default {
   },
   computed: {
     ...mapState({
-      user: (state) => state.user.user?.uid,
+      authUser: (state) => state.user.authUser?.uid,
     }),
     requiresAuth() {
       return this.$route.meta.requiresAuth;

@@ -4,7 +4,7 @@
       <v-row class="mx-0 justify-center mb-12">
         <v-avatar style="color: #404b3b; border: 5px solid #404b3b" size="180">
           <div class="text-h2">
-            {{ initials(user) }}
+            {{ initials(authUser) }}
           </div>
         </v-avatar>
       </v-row>
@@ -63,7 +63,7 @@ export default {
       return rules;
     },
     ...mapState({
-      user: (state) => state.user.user,
+      authUser: (state) => state.user.authUser,
     }),
   },
   data() {
@@ -99,13 +99,13 @@ export default {
     this.textFields.forEach((element) => {
       switch (element.key) {
         case "name":
-          element.value = this.user.displayName;
+          element.value = this.authUser.displayName;
           break;
         case "net":
-          element.value = this.user.net;
+          element.value = this.authUser.net;
           break;
         case "tax":
-          element.value = this.user.tax;
+          element.value = this.authUser.tax;
           break;
         default:
       }

@@ -1,26 +1,26 @@
-import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { createUser } from "../../api/endpoints";
-const state = { user: null };
+import {
+  createUser, createUserWithEmail, editUserEmail, editUserName, editUserPassword, getUser, sendResetPasswordEmail, signout, userSignIn
+} from "../../api/endpoints";
+const state = { authUser: null, dbUser: null, moreInfoSnackbar: true };
 const getters = {
-  infoSnackbar: (state, getters, rootState) => {
-    return rootState.general.moreInfoSnackbar
-  }
-  
+
 };
 const actions = {
   emailSignup({ dispatch, commit, getters }, obj) {
     const { email, password, name } = obj
-    const auth = getAuth();
     //change then to awaits
-    return createUserWithEmailAndPassword(auth, email, password)
+
+    return createUserWithEmail(email, password)
       .then(async (userCredential) => {
-        await createUser({
+        const newUser = {
           firebaseAuthUserUID: userCredential.user.uid,
-          infoSnackbar: getters.infoSnackbar,
-          displayName: name,
+          dontShowAlertAgain: getters.infoSnackbar,
           email: email,
-        })
-        commit("setUser", userCredential.user)
+          displayName: name,
+        }
+        await createUser(newUser)
+        commit("setAuthUser", userCredential.user)
+        commit("setDbUser", newUser)
       })
       .catch((error) => {
         dispatch('snackbar/toggleSnackbar', { color: "red", message: error.message }, { root: true })
@@ -28,8 +28,7 @@ const actions = {
       });
   },
   logOut({ dispatch, commit }) {
-    const auth = getAuth();
-    return signOut(auth).then(() => {
+    return signout().then(() => {
       commit("resetUser")
     }).catch((error) => {
       dispatch('snackbar/toggleSnackbar', { color: "red", message: error.message }, { root: true })
@@ -37,27 +36,53 @@ const actions = {
   },
   logIn({ commit, dispatch }, obj) {
     const { email, password } = obj
-    const auth = getAuth();
-    return signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
+    return userSignIn(email, password)
+      .then(async (userCredential) => {
         // Signed in 
-        commit("setUser", userCredential.user)
+        commit("setAuthUser", userCredential.user)
+        const dbUser = await dispatch("user/getUser")
+        commit("setDbUser", dbUser)
         // ...
       })
       .catch((error) => {
         dispatch('snackbar/toggleSnackbar', { color: "red", message: error.message }, { root: true })
       });
+  },
+  getUser() {
+    const result = null
+    getUser().then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        result.push({ ...doc.data(), docId: doc.id })
+      });
+      return result
+    })
+  },
+  async editUserName({ commit, dispatch }, name) {
+    return await editUserName(name)
+  },
+  async editUserEmail({ commit, dispatch }, email) {
+    return await editUserEmail(email)
+  },
+  async editUserPassword({ commit, dispatch }, newPassword) {
+    return await editUserPassword(newPassword)
+  },
+  async sendResetPasswordEmail({ commit, dispatch }, email) {
+    return await sendResetPasswordEmail(email)
   }
 };
 const mutations = {
-  setUser(state, user) {
-    state.user = user
+  setAuthUser(state, user) {
+    state.authUser = user
+  },
+  setDbUser(state, user) {
+    state.dbUser = user
   },
   resetUser(state) {
-    state.user = null
+    state.authUser = null
+    state.dbUser = null
   },
-  closeMoreInfoSnackbar(state) {
-    state.moreInfoSnackbar = false;
+  closeMoreInfoSnackbar(state, value) {
+    state.moreInfoSnackbar = value;
   }
 };
 export default {

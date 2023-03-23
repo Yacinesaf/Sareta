@@ -234,7 +234,7 @@ export default {
             displayName: result.user.displayName,
             email: result.user.email,
           });
-          this.$store.commit("user/setUser", {
+          this.$store.commit("user/setAuthUser", {
             displayName: result.user.displayName,
             email: result.user.email,
             uid: result.user.uid,

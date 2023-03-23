@@ -3,7 +3,7 @@ import { createBudget, deleteBudget, getAllBudgets, getBudgetCardImage } from ".
 const state = { userBudgets: [] };
 const getters = {
   userId: (state, getters, rootState) => {
-    return rootState.user.user.uid
+    return rootState.user.authUser.uid
   }
 };
 

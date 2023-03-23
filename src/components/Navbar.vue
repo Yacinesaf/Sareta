@@ -6,11 +6,11 @@
         <div style="padding-left: 1px" class="text-h6">areta</div>
       </v-row>
       <v-spacer></v-spacer>
-      <v-btn v-if="!user" @click="goLogin" outlined>Log in</v-btn>
+      <v-btn v-if="!authUser" @click="goLogin" outlined>Log in</v-btn>
       <v-menu offset-y v-else open-on-hover bottom>
         <template v-slot:activator="{ on, attrs }">
           <v-avatar v-bind="attrs" v-on="on" style="color: white; border: 2px solid white; cursor: pointer" size="40">
-            {{ initials(user) }}
+            {{ initials(authUser) }}
           </v-avatar>
         </template>
         <v-list>
@@ -29,7 +29,7 @@ import { initials } from "../helper/functions";
 export default {
   computed: {
     ...mapState({
-      user: (state) => state.user.user,
+      authUser: (state) => state.user.authUser,
     }),
   },
   data() {

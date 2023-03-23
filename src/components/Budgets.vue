@@ -85,7 +85,7 @@ export default {
       return rules;
     },
     ...mapState({
-      userId: (state) => state.user.user.uid,
+      userId: (state) => state.user.authUser.uid,
       budgets: (state) => state.budgets.userBudgets,
     }),
     areBudgetsPopulated() {
