@@ -1,11 +1,23 @@
 <template>
-  <v-snackbar timeout="-1" color="primary" outlined bottom right :value="isInfoSnackbarShown" vertical>
-    <div style="font-size: 1.15rem">
-      Go to Profile to finish your registration and get the full experience of the app
+  <v-snackbar
+    timeout="-1"
+    color="primary"
+    outlined
+    bottom
+    right
+    :value="!showInfoSnackbar && notProfile && IsAuthenticated"
+    vertical
+  >
+    <div style="font-size: 1.05rem">
+      Go to Profile to finish your registration
     </div>
     <template v-slot:action="{ attrs }">
-      <v-btn color="primary" text v-bind="attrs" @click="closeInfoSnackbar"> Do not show again </v-btn>
-      <v-btn color="primary" text v-bind="attrs" @click="goToProfile"> Go to Profile </v-btn>
+      <v-btn color="primary" text v-bind="attrs" @click="closeInfoSnackbar">
+        Do not show again
+      </v-btn>
+      <v-btn color="primary" text v-bind="attrs" @click="goToProfile">
+        Go to Profile
+      </v-btn>
     </template>
   </v-snackbar>
 </template>
@@ -15,12 +27,18 @@ import { mapState } from "vuex";
 export default {
   computed: {
     ...mapState({
-      isInfoSnackbarShown: (state) => state.general.moreInfoSnackbar,
+      showInfoSnackbar: (state) => state.user.dbUser?.dontShowAlertAgain,
     }),
+    notProfile() {
+      return this.$route.path !== "/profile";
+    },
+    IsAuthenticated() {
+      return this.$route.meta.requiresAuth;
+    },
   },
   methods: {
     closeInfoSnackbar() {
-      this.$store.commit("general/closeMoreInfoSnackbar");
+      this.$store.dispatch("user/editSnackbarInfo");
     },
     goToProfile() {
       this.$router.push("/profile");

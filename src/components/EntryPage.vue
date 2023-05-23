@@ -9,14 +9,28 @@
     style="align-items: center; min-height: calc(100vh - 64px)"
   >
     <v-row justify="center">
-      <v-col class="px-0 entryCard animationFadeout" cols="10" sm="9" md="6" lg="4" xl="3">
+      <v-col
+        class="px-0 entryCard animationFadeout"
+        cols="10"
+        sm="9"
+        md="6"
+        lg="4"
+        xl="3"
+      >
         <v-card style="border-radius: 16px">
           <v-row justify="center">
-            <v-col cols="10" class="animationFadeout" v-if="isChosingSignupMode">
+            <v-col
+              cols="10"
+              class="animationFadeout"
+              v-if="isChosingSignupMode"
+            >
               <div class="text-h5 text-center" style="font-weight: 600">
                 Choose a method to sign up and start improving your spening
               </div>
-              <div class="d-flex align-center pt-6" style="flex-direction: column">
+              <div
+                class="d-flex align-center pt-6"
+                style="flex-direction: column"
+              >
                 <v-btn
                   :key="i"
                   v-for="(btn, i) in signupBtns"
@@ -26,16 +40,26 @@
                   class="shadow my-3 justify-start"
                 >
                   <span
-                    ><v-icon color="primary" class="mr-2">mdi-{{ btn.icon }}</v-icon></span
+                    ><v-icon color="primary" class="mr-2"
+                      >mdi-{{ btn.icon }}</v-icon
+                    ></span
                   >
-                  <span class="mr-1" v-show="$vuetify.breakpoint.smAndUp">Continue with</span>
+                  <span class="mr-1" v-show="$vuetify.breakpoint.smAndUp"
+                    >Continue with</span
+                  >
                   <span>{{ btn.text }}</span>
                 </v-btn>
               </div>
             </v-col>
             <v-col v-else class="pt-12 pb-6 animationFadeout" cols="10">
-              <div v-if="!isLoggingIn" style="position: absolute; top: 2rem; left: 1rem">
-                <v-btn elevation="0" color="transparent" @click="returnToChosingSignUpMethod"
+              <div
+                v-if="!isLoggingIn"
+                style="position: absolute; top: 2rem; left: 1rem"
+              >
+                <v-btn
+                  elevation="0"
+                  color="transparent"
+                  @click="returnToChosingSignUpMethod"
                   ><v-icon size="xx-large">mdi-chevron-left</v-icon></v-btn
                 >
               </div>
@@ -46,33 +70,56 @@
               >
                 Reset password
               </div>
-              <div v-else class="text-h5 text-md-h4 text-center mb-5 mb-md-10" style="font-weight: 700">
+              <div
+                v-else
+                class="text-h5 text-md-h4 text-center mb-5 mb-md-10"
+                style="font-weight: 700"
+              >
                 {{ isLoggingIn ? "Login" : "Sign up" }}
               </div>
-              <v-row v-if="isLoggingIn" justify="center" class="my-6">
+              <v-row
+                v-if="isLoggingIn && !isForgotPasswordMode"
+                justify="center"
+                class="my-6"
+              >
                 <v-col>
-                  <v-btn outlined style="height: 40px; width: 100%" color="primary" @click="ssoSignup(facebookProvider)"
+                  <v-btn
+                    outlined
+                    style="height: 40px; width: 100%"
+                    color="primary"
+                    @click="ssoSignup(facebookProvider)"
                     ><v-icon class="mr-2">mdi-facebook</v-icon> Facebook</v-btn
                   >
                 </v-col>
                 <v-col>
-                  <v-btn outlined style="height: 40px; width: 100%" color="primary" @click="ssoSignup(googleProvider)"
+                  <v-btn
+                    outlined
+                    style="height: 40px; width: 100%"
+                    color="primary"
+                    @click="ssoSignup(googleProvider)"
                     ><v-icon class="mr-2">mdi-google</v-icon> Google</v-btn
                   >
                 </v-col>
               </v-row>
-              <v-form v-if="isForgotPasswordMode">
+              <v-form ref="resetPassword" v-if="isForgotPasswordMode">
                 <div class="text-md-h6 text-center mb-4">
-                  Please enter the email. If the email is linked to an account you'll receive an email to reset it.
+                  Please enter your email. If it's linked to an account
+                  you'll receive an email to reset your password.
                 </div>
                 <v-text-field
-                  :rules="isLoggingIn ? [rules.required] : [rules.required, rules.email]"
+                  :rules="[rules.required, rules.email]"
                   style="border-radius: 6px"
                   label="Email"
                   outlined
+                  v-model="emailPassword"
                   :dense="$vuetify.breakpoint.xsOnly"
                 ></v-text-field>
-                <v-btn class="float-end" color="primary" @click="lo">Submit</v-btn>
+                <v-btn
+                  class="float-end"
+                  color="primary"
+                  @click="sendResetPasswordEmail"
+                  >Submit</v-btn
+                >
               </v-form>
               <v-form v-else v-model="valid" ref="form">
                 <v-text-field
@@ -87,7 +134,11 @@
                   v-show="!isLoggingIn"
                 ></v-text-field>
                 <v-text-field
-                  :rules="isLoggingIn ? [rules.required] : [rules.required, rules.email]"
+                  :rules="
+                    isLoggingIn
+                      ? [rules.required]
+                      : [rules.required, rules.email]
+                  "
                   style="border-radius: 6px"
                   label="Email"
                   v-model="email"
@@ -100,7 +151,11 @@
                   style="position: relative"
                 >
                   <v-text-field
-                    :rules="isLoggingIn ? [rules.required] : [rules.required, rules.min]"
+                    :rules="
+                      isLoggingIn
+                        ? [rules.required]
+                        : [rules.required, rules.min]
+                    "
                     :append-icon="showFirstPassword ? 'mdi-eye' : 'mdi-eye-off'"
                     :type="showFirstPassword ? 'text' : 'password'"
                     v-model="password"
@@ -114,7 +169,12 @@
                   </v-text-field>
                   <div
                     @click="forgotPasswordMode"
-                    style="position: absolute; right: 0; bottom: 4px; cursor: pointer"
+                    style="
+                      position: absolute;
+                      right: 0;
+                      bottom: 4px;
+                      cursor: pointer;
+                    "
                     v-show="isLoggingIn"
                   >
                     Forgot password?
@@ -132,21 +192,29 @@
                   v-show="!isLoggingIn"
                   @click:append="showSecondPassword = !showSecondPassword"
                 ></v-text-field>
-                <v-btn class="float-end" color="primary" @click="isLoggingIn ? login() : signup()">{{
-                  isLoggingIn ? "Login" : "Sign up"
-                }}</v-btn>
+                <v-btn
+                  class="float-end"
+                  color="primary"
+                  :loading="isBtnLoading"
+                  @click="isLoggingIn ? login() : signup()"
+                  >{{ isLoggingIn ? "Login" : "Sign up" }}</v-btn
+                >
               </v-form>
             </v-col>
             <v-col v-if="!isForgotPasswordMode" cols="10">
               <div v-if="isLoggingIn" class="text-center">
                 You don't have an account?
-                <span @click="toggleSignupForm" style="color: #21331d; cursor: pointer; font-weight: 600"
+                <span
+                  @click="toggleSignupForm"
+                  style="color: #21331d; cursor: pointer; font-weight: 600"
                   >Sign up here.</span
                 >
               </div>
               <div v-else class="text-center">
                 You already have an account?
-                <span @click="toggleLoginForm" style="color: #21331d; cursor: pointer; font-weight: 600"
+                <span
+                  @click="toggleLoginForm"
+                  style="color: #21331d; cursor: pointer; font-weight: 600"
                   >Log in here.</span
                 >
               </div>
@@ -154,7 +222,11 @@
             <v-col v-else cols="10">
               <div class="text-center">
                 Go back to
-                <span @click="goBackToLogin" style="color: #21331d; cursor: pointer; font-weight: 600">Log in.</span>
+                <span
+                  @click="goBackToLogin"
+                  style="color: #21331d; cursor: pointer; font-weight: 600"
+                  >Log in.</span
+                >
               </div>
             </v-col>
           </v-row>
@@ -165,15 +237,16 @@
 </template>
 
 <script>
-import { getAuth, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
+import {
+  getAuth,
+  signInWithPopup,
+  GoogleAuthProvider,
+  FacebookAuthProvider,
+} from "firebase/auth";
 import rules from "../rules/rules";
 import { createUser } from "../api/endpoints";
-import { mapState } from "vuex";
 export default {
   computed: {
-    ...mapState({
-      infoSnackbar: (state) => state.general.moreInfoSnackbar,
-    }),
     landingBg() {
       if (this.$vuetify.breakpoint.xs) {
         return "BgMobile.png";
@@ -197,6 +270,7 @@ export default {
   data() {
     return {
       isLoggingIn: false,
+      isBtnLoading: false,
       isChosingSignupMode: true,
       isForgotPasswordMode: false,
       showFirstPassword: false,
@@ -208,6 +282,7 @@ export default {
       password: "",
       password1: "",
       email: "",
+      emailPassword: "",
       name: "",
       matchingPasswords: () => {
         if (this.password === this.password1) {
@@ -228,12 +303,18 @@ export default {
     ssoSignup(provider) {
       signInWithPopup(this.auth, provider)
         .then((result) => {
-          createUser({
-            id: result.user.uid,
-            infoSnackbar: this.infoSnackbar,
-            displayName: result.user.displayName,
+          const user = {
+            firebaseAuthUserUID: result.user.uid,
+            dontShowAlertAgain: false,
             email: result.user.email,
-          });
+            displayName: result.user.displayName,
+            isSso: true,
+            tax: null,
+            net: null,
+            members: []
+          };
+          createUser(user);
+          this.$store.commit("user/setDbUser", user);
           this.$store.commit("user/setAuthUser", {
             displayName: result.user.displayName,
             email: result.user.email,
@@ -242,7 +323,10 @@ export default {
           this.$router.push("/budgets");
         })
         .catch((error) => {
-          this.$store.dispatch("snackbar/toggleSnackbar", { color: "red", message: error.message });
+          this.$store.dispatch("snackbar/toggleSnackbar", {
+            color: "red",
+            message: error.message,
+          });
         });
     },
     getSignupFunction(method) {
@@ -267,7 +351,6 @@ export default {
     toggleLoginForm() {
       this.isLoggingIn = true;
       this.isChosingSignupMode = false;
-      this.$router.push("/login");
     },
     toggleSignupForm() {
       this.isLoggingIn = false;
@@ -280,14 +363,36 @@ export default {
     forgotPasswordMode() {
       this.isForgotPasswordMode = true;
     },
+    sendResetPasswordEmail() {
+      if (this.$refs.resetPassword.validate()) {
+        this.$store.dispatch("user/sendResetPasswordEmail", this.emailPassword);
+      }
+    },
     login() {
-      this.$store.dispatch("user/logIn", { email: this.email, password: this.password });
-      this.$router.push("/budgets");
+      this.isBtnLoading = true;
+      this.$store
+        .dispatch("user/logIn", {
+          email: this.email,
+          password: this.password,
+        })
+        .then(() => {
+          this.isBtnLoading = false;
+          this.$router.push("/budgets");
+        });
     },
     signup() {
       if (this.$refs.form.validate()) {
-        this.$store.dispatch("user/emailSignup", { email: this.email, password: this.password, name: this.name });
-        this.$router.push("/budgets");
+        this.isBtnLoading = true;
+        this.$store
+          .dispatch("user/emailSignup", {
+            email: this.email,
+            password: this.password,
+            name: this.name,
+          })
+          .then(() => {
+            this.isBtnLoading = false;
+            this.$router.push("/budgets");
+          });
       }
     },
   },
@@ -297,6 +402,7 @@ export default {
     this.auth = getAuth();
   },
   mounted() {
+    this.$root.$on("navbarLoginClicked", this.toggleLoginForm);
     if (this.$route.params.state !== "login") return;
     this.isChosingSignupMode = false;
     this.isLoggingIn = true;
@@ -304,9 +410,9 @@ export default {
   watch: {
     isLoggingIn: function () {
       if (this.isLoggingIn) {
-        this.$router.push("/login");
+        this.$router.replace("/login");
       } else {
-        this.$router.push("/signup");
+        this.$router.replace("/signup");
       }
     },
   },

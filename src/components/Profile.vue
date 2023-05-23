@@ -1,55 +1,124 @@
 <template>
-  <v-row class="justify-center py-12">
+  <v-row class="justify-center pt-12 ma-0">
     <v-col cols="10" md="5">
-      <v-row class="mx-0 justify-center mb-12">
-        <v-avatar style="color: #404b3b; border: 5px solid #404b3b" size="180">
+      `
+      <v-row class="mx-0 justify-center mb-4">
+        <v-avatar
+          style="color: #404b3b; border: 5px solid #404b3b"
+          :size="!dbUser.isSso ? '100' : '150'"
+        >
           <div class="text-h2">
-            {{ initials(authUser) }}
+            {{ initials(dbUser) }}
           </div>
         </v-avatar>
       </v-row>
-      <div :key="i" v-for="(textField, i) in textFields">
-        <label class="text-h6" :for="textField.label">{{ textField.label }}</label>
-        <v-text-field
-          :name="textField.label"
-          :readonly="textField.isReadOnly"
-          :rules="textField.rules"
-          style="border-radius: 6px"
-          v-model="textField.value"
+      <div v-if="!dbUser.isSso">
+        <label class="text-h6" for="password">Password</label>
+        <div class="d-flex">
+          <v-text-field
+            :readonly="isPasswordReadonly"
+            dense
+            :rules="
+              isPasswordReadonly
+                ? []
+                : [rules.required, rules.password, rules.min]
+            "
+            :append-icon="
+              !isPasswordReadonly
+                ? showPassword
+                  ? 'mdi-eye'
+                  : 'mdi-eye-off'
+                : ''
+            "
+            :type="showPassword ? 'text' : 'password'"
+            name="password"
+            style="border-radius: 6px"
+            v-model="password"
+            @click:append="showPassword = !showPassword"
+            hint="At least 8 characters"
+            outlined
+          ></v-text-field>
+          <v-btn
+            v-if="isPasswordReadonly"
+            @click="editPassword"
+            outlined
+            style="height: 40px; width: 40px"
+            class="ml-3"
+            ><v-icon>mdi-pencil</v-icon>
+          </v-btn>
+          <div v-else class="d-flex">
+            <v-btn
+              @click="confirmPasswordEdit"
+              outlined
+              style="height: 40px; width: 40px"
+              class="ml-3"
+              ><v-icon>mdi-check</v-icon>
+            </v-btn>
+            <v-btn
+              @click="cancelPasswordEdit"
+              outlined
+              style="height: 40px; width: 40px"
+              class="ml-3"
+              ><v-icon>mdi-cancel</v-icon>
+            </v-btn>
+          </div>
+        </div>
+      </div>
+      <div v-if="isReadonly" class="d-flex justify-end">
+        <v-btn @click="enableUserInfoEditing" outlined style="height: 40px"
+          >Edit your infos
+        </v-btn>
+      </div>
+      <label class="text-h6" for="displayName">Name</label>
+      <v-text-field
+        name="displayName"
+        :readonly="isReadonly"
+        dense
+        type="text"
+        :rules="[rules.required]"
+        style="border-radius: 6px"
+        v-model="displayName"
+        outlined
+      ></v-text-field>
+      <label class="text-h6" for="net">Net income</label>
+      <v-text-field
+        :readonly="isReadonly"
+        name="net"
+        dense
+        :rules="[rules.required]"
+        type="number"
+        style="border-radius: 6px"
+        v-model="net"
+        outlined
+      ></v-text-field>
+      <label class="text-h6" for="tax">Approx. tax rate</label>
+      <v-text-field
+        :readonly="isReadonly"
+        dense
+        name="tax"
+        :rules="[rules.required]"
+        type="number"
+        style="border-radius: 6px"
+        v-model="tax"
+        outlined
+      ></v-text-field>
+      <div v-if="!isReadonly" class="d-flex justify-end">
+        <v-btn
+          @click="confirmUserInfoEdit"
           outlined
-          :type="textField.type"
-        ></v-text-field>
+          style="height: 40px; width: 40px"
+          class="ml-3"
+          ><v-icon>mdi-check</v-icon>
+        </v-btn>
+        <v-btn
+          @click="cancelUserInfoEdit"
+          outlined
+          style="height: 40px; width: 40px"
+          class="ml-3"
+          ><v-icon>mdi-cancel</v-icon>
+        </v-btn>
       </div>
     </v-col>
-    <!-- <v-text-field
-      readonly
-      :rules="[rules.required]"
-      style="border-radius: 6px"
-      v-model="passwordReset"
-      outlined
-    ></v-text-field>
-    <v-text-field
-      readonly
-      :rules="[rules.required]"
-      style="border-radius: 6px"
-      v-model="netIncome"
-      outlined
-    ></v-text-field>
-    <v-text-field
-      readonly
-      :rules="[rules.required]"
-      style="border-radius: 6px"
-      v-model="approxTax"
-      outlined
-    ></v-text-field>
-    <v-text-field readonly :rules="[rules.required]" style="border-radius: 6px" v-model="name" outlined></v-text-field>
-    <v-text-field
-      readonly
-      :rules="[rules.required]"
-      style="border-radius: 6px"
-      v-model="currency"
-      outlined
-    ></v-text-field> -->
   </v-row>
 </template>
 
@@ -63,53 +132,60 @@ export default {
       return rules;
     },
     ...mapState({
+      dbUser: (state) => state.user.dbUser,
       authUser: (state) => state.user.authUser,
     }),
   },
   data() {
     return {
       initials: initials,
-      textFields: [
-        { rules: [], value: "", isReadOnly: true, type: "text", label: "Name", key: "name" },
-        {
-          rules: [],
-          value: "lllllllllllllllll",
-          isReadOnly: true,
-          type: "password",
-          label: "Password",
-          key: "password",
-        },
-        { rules: [], value: "", isReadOnly: true, type: "number", label: "Net income", key: "net" },
-        {
-          rules: [],
-          value: "",
-          isReadOnly: true,
-          type: "number",
-          label: "Approximate tax percentage per year",
-          key: "tax",
-        },
-      ],
-      passwordReset: "",
-      netIncome: "",
-      approxTax: "",
-      name: "",
+      password: "lllllllllllllllll",
+      net: "",
+      tax: "",
+      displayName: "",
+      isReadonly: true,
+      showPassword: false,
+      isPasswordReadonly: true,
     };
   },
+  methods: {
+    enableUserInfoEditing() {
+      this.isReadonly = false;
+    },
+    editPassword() {
+      this.password = "";
+      this.isPasswordReadonly = false;
+    },
+    confirmUserInfoEdit() {
+      const obj = {
+        displayName: this.displayName,
+        tax: this.tax,
+        net: this.net,
+      };
+      this.$store.dispatch("user/editUser", obj);
+      this.isReadonly = true;
+    },
+    confirmPasswordEdit() {
+      this.$store.dispatch("user/editUserPassword", this.password).then(() => {
+        this.isPasswordReadonly = true;
+        this.showPassword = false;
+        this.password = "lllllllllllllllll";
+      });
+    },
+    cancelUserInfoEdit() {
+      this.isReadonly = true;
+    },
+    cancelPasswordEdit() {
+      this.password = "lllllllllllllllll";
+      this.isPasswordReadonly = true;
+    },
+  },
+
   mounted() {
-    this.textFields.forEach((element) => {
-      switch (element.key) {
-        case "name":
-          element.value = this.authUser.displayName;
-          break;
-        case "net":
-          element.value = this.authUser.net;
-          break;
-        case "tax":
-          element.value = this.authUser.tax;
-          break;
-        default:
-      }
-    });
+    console.log(this.dbUser);
+    this.displayName = this.dbUser.displayName;
+    if (this.dbUser.net) this.net = this.dbUser.net;
+    if (this.dbUser.tax) this.tax = this.dbUser.tax;
   },
 };
 </script>

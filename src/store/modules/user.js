@@ -1,89 +1,193 @@
 import {
-  createUser, createUserWithEmail, editUserEmail, editUserName, editUserPassword, getUser, sendResetPasswordEmail, signout, userSignIn
+  createUser,
+  createUserWithEmail,
+  editUserMembers,
+  editUserInfo,
+  editUserPassword,
+  getDbUser,
+  sendResetPasswordEmail,
+  signout,
+  userSignIn,
+  editInfoSnackbarState,
 } from "../../api/endpoints";
-const state = { authUser: null, dbUser: null, moreInfoSnackbar: true };
-const getters = {
-
-};
+import * as authErrorsMsgs from "../../utils/firebaseAuthErrorList.json";
+const state = { authUser: null, dbUser: null };
+const getters = {};
 const actions = {
-  emailSignup({ dispatch, commit, getters }, obj) {
-    const { email, password, name } = obj
-    //change then to awaits
-
+  emailSignup({ dispatch, commit }, obj) {
+    const { email, password, name } = obj;
     return createUserWithEmail(email, password)
       .then(async (userCredential) => {
         const newUser = {
           firebaseAuthUserUID: userCredential.user.uid,
-          dontShowAlertAgain: getters.infoSnackbar,
+          dontShowAlertAgain: false,
           email: email,
           displayName: name,
-        }
-        await createUser(newUser)
-        commit("setAuthUser", userCredential.user)
-        commit("setDbUser", newUser)
+          isSso: false,
+          tax: null,
+          net: null,
+          members: [],
+        };
+        await createUser(newUser);
+        commit("setAuthUser", userCredential.user);
+        commit("setDbUser", newUser);
       })
       .catch((error) => {
-        dispatch('snackbar/toggleSnackbar', { color: "red", message: error.message }, { root: true })
+        dispatch(
+          "snackbar/toggleSnackbar",
+          { color: "red", message: authErrorsMsgs.default[error.code] },
+          { root: true }
+        );
         // ..
       });
   },
   logOut({ dispatch, commit }) {
-    return signout().then(() => {
-      commit("resetUser")
-    }).catch((error) => {
-      dispatch('snackbar/toggleSnackbar', { color: "red", message: error.message }, { root: true })
-    });
+    return signout()
+      .then(() => {
+        commit("resetUser");
+      })
+      .catch((error) => {
+        dispatch(
+          "snackbar/toggleSnackbar",
+          { color: "red", message: authErrorsMsgs.default[error.code] },
+          { root: true }
+        );
+      });
   },
-  logIn({ commit, dispatch }, obj) {
-    const { email, password } = obj
+  logIn({ commit, dispatch, state }, obj) {
+    const { email, password } = obj;
     return userSignIn(email, password)
       .then(async (userCredential) => {
-        // Signed in 
-        commit("setAuthUser", userCredential.user)
-        const dbUser = await dispatch("user/getUser")
-        commit("setDbUser", dbUser)
+        // Signed in
+        commit("setAuthUser", userCredential.user);
+        const dbUser = await dispatch("getUser", state.authUser.uid);
+        commit("setDbUser", dbUser);
         // ...
       })
       .catch((error) => {
-        dispatch('snackbar/toggleSnackbar', { color: "red", message: error.message }, { root: true })
+        dispatch(
+          "snackbar/toggleSnackbar",
+          {
+            color: "red",
+            message: authErrorsMsgs.default[error.code],
+          },
+          { root: true }
+        );
       });
   },
-  getUser() {
-    const result = null
-    getUser().then((querySnapshot) => {
+  getUser({ commit }, userId) {
+    let result = null;
+    getDbUser(userId).then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
-        result.push({ ...doc.data(), docId: doc.id })
+        result = doc.data();
+        result.docId = doc.id;
       });
-      return result
-    })
+      commit("setDbUser", result);
+    });
   },
-  async editUserName({ commit, dispatch }, name) {
-    return await editUserName(name)
+  editUser({ commit, dispatch, state }, obj) {
+    const userObj = { ...state.dbUser, ...obj };
+    return editUserInfo(state.dbUser.docId, userObj)
+      .then(() => {
+        commit("setEditedUser", userObj);
+        dispatch(
+          "snackbar/toggleSnackbar",
+          { color: "green", message: "User have been successfully updated!" },
+          { root: true }
+        );
+      })
+      .catch(() => {
+        dispatch(
+          "snackbar/toggleSnackbar",
+          { color: "red", message: "There was an error. Please try again" },
+          { root: true }
+        );
+      });
   },
-  async editUserEmail({ commit, dispatch }, email) {
-    return await editUserEmail(email)
+  editUserPassword({ dispatch }, newPassword) {
+    return editUserPassword(newPassword)
+      .then(() => {
+        dispatch(
+          "snackbar/toggleSnackbar",
+          {
+            color: "green",
+            message: "You have successfully changed your password!",
+          },
+          { root: true }
+        );
+      })
+      .catch((error) => {
+        dispatch(
+          "snackbar/toggleSnackbar",
+          { color: "red", message: authErrorsMsgs.default[error.code] },
+          { root: true }
+        );
+      });
   },
-  async editUserPassword({ commit, dispatch }, newPassword) {
-    return await editUserPassword(newPassword)
+  sendResetPasswordEmail({ dispatch }, email) {
+    return sendResetPasswordEmail(email)
+      .then(() => {
+        dispatch(
+          "snackbar/toggleSnackbar",
+          { color: "green", message: "A reset email has been sent to you!" },
+          { root: true }
+        );
+      })
+      .catch((error) => {
+        dispatch(
+          "snackbar/toggleSnackbar",
+          { color: "red", message: authErrorsMsgs.default[error.code] },
+          { root: true }
+        );
+      });
   },
-  async sendResetPasswordEmail({ commit, dispatch }, email) {
-    return await sendResetPasswordEmail(email)
-  }
+  editUserMembers({ dispatch, commit, state }, memberList) {
+    editUserMembers(state.dbUser.docId, memberList)
+      .then(() => {
+        commit("setUserMembers", memberList);
+        dispatch(
+          "snackbar/toggleSnackbar",
+          { color: "green", message: "A new member has been added" },
+          { root: true }
+        );
+      })
+      .catch(() => {
+        dispatch(
+          "snackbar/toggleSnackbar",
+          {
+            color: "red",
+            message:
+              "A problem occured while adding a new member.Please try again",
+          },
+          { root: true }
+        );
+      });
+  },
+  async editSnackbarInfo({ commit, state }) {
+    await editInfoSnackbarState(state.dbUser.docId);
+    commit("closeMoreInfoSnackbar");
+  },
 };
 const mutations = {
   setAuthUser(state, user) {
-    state.authUser = user
+    state.authUser = user;
   },
   setDbUser(state, user) {
-    state.dbUser = user
+    state.dbUser = user;
   },
   resetUser(state) {
-    state.authUser = null
-    state.dbUser = null
+    state.authUser = null;
+    state.dbUser = null;
   },
-  closeMoreInfoSnackbar(state, value) {
-    state.moreInfoSnackbar = value;
-  }
+  setUserMembers(state, memberList) {
+    state.dbUser.members = memberList;
+  },
+  closeMoreInfoSnackbar(state) {
+    state.dbUser.dontShowAlertAgain = true;
+  },
+  setEditedUser(state, editedUser) {
+    state.dbUser = editedUser;
+  },
 };
 export default {
   namespaced: true,

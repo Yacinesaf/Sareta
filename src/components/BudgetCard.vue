@@ -1,6 +1,6 @@
 <template>
   <v-card style="cursor: pointer" class="rounded-lg">
-    <img :src="budget.imgUrl" width="100%" height="280px" />
+    <img :src="budget.imgUrl" width="100%" height="250px" />
     <v-card-title>
       <div class="text-h6" style="font-weight: 700; color: #21331d">{{ budget.name }}</div>
     </v-card-title>

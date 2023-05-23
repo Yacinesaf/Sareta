@@ -10,6 +10,7 @@ function dateFormater(timestamp) {
 }
 function initials(user){
   const splitedName = user.displayName.split(" ");
+  if(splitedName.length <= 1) return user.displayName[0].toUpperCase();``
   const firstNameInitial = splitedName[0].split("")[0];
   const lastNameInitial = splitedName[1].split("")[0];
   return firstNameInitial.toUpperCase() + lastNameInitial.toUpperCase();

@@ -1,14 +1,24 @@
 <template>
-  <v-row class="pt-16" justify="center">
-    <v-row justify="center">
+  <v-row class="pt-8 ma-0" justify="center">
+    <v-row justify="center" class="ma-0">
       <v-col cols="8">
         <v-row class="mb-3">
           <v-col>
-            <h1>{{budget.name}}</h1>
-            <div>{{budget.description}}</div>
+            <h1>{{ budget.name }}</h1>
+            <div>{{ budget.description }}</div>
           </v-col>
           <v-col cols="4"
-            ><assignee-card :assignees="['dddd', 'fff', 'eeee', 'gggg', 'dddd', 'fff', 'eeee', 'gggg']"
+            ><assignee-card
+              :assignees="[
+                'dddd',
+                'fff',
+                'eeee',
+                'gggg',
+                'dddd',
+                'fff',
+                'eeee',
+                'gggg',
+              ]"
           /></v-col>
         </v-row>
         <div><detailed-results /></div>
@@ -20,21 +30,30 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import AddExpense from "./AddExpense.vue";
 import AssigneeCard from "./AssigneeCard.vue";
 import BudgetTable from "./BudgetTable.vue";
 import DetailedResults from "./DetailedResults.vue";
 export default {
   components: { AddExpense, BudgetTable, AssigneeCard, DetailedResults },
+  computed: {
+    ...mapState({
+      currentBudget: (state) => state.budgets.currentBudget,
+    }),
+  },
   data() {
     return {
-      budget: null
+      budget: null,
     };
   },
-  created(){
-    if(!this.$route.params.budget) return;
-    this.budget = this.$route.params.budget;
-}
+  created() {
+    if (!this.$route.params.budget) {
+      this.$store.dispatch("budgets/getBudget", this.$route.params.id);
+    } else {
+      this.$store.commit("budgets/setCurrentBudget", this.$route.params.budget);
+    }
+  },
 };
 </script>
 
