@@ -3,7 +3,7 @@ import {
   createUserWithEmailAndPassword,
   getAuth,
   signInWithEmailAndPassword,
-  signOut,
+  signOut
 } from "firebase/auth";
 import "firebase/compat/firestore";
 import firebase from "../firebase/firebase";
@@ -16,7 +16,6 @@ function getBudgetCardImage() {
       "https://api.unsplash.com/photos/random?client_id=8H2mV-XceZaObYIHpzH1IqKP7UquA2wiYoS5qz8CnQE&orientation=landscape&query=finance,accounting"
     )
     .then((res) => {
-      console.log(res);
       return res.data.urls.regular;
     });
 }
@@ -37,7 +36,7 @@ function createBudget(obj) {
     .collection("budgets")
     .add(obj)
     .then((docRef) => {
-      db.collection("budgets").doc(docRef.id).update({
+      return db.collection("budgets").doc(docRef.id).update({
         docId: docRef.id,
       });
     })
@@ -47,19 +46,6 @@ function createBudget(obj) {
 }
 function deleteBudget(budgetDocId) {
   return db.collection("budgets").doc(budgetDocId).delete();
-}
-function editBudget(obj) {
-  db.collection("budgets")
-    .doc(obj.docId)
-    .set({
-      name: obj.name,
-      uId: obj.id,
-      description: obj.description,
-    })
-    .then(() => {})
-    .catch((error) => {
-      console.error("Error adding document: ", error);
-    });
 }
 function editInfoSnackbarState(userDocId) {
   db.collection("users").doc(userDocId).update({
@@ -71,6 +57,7 @@ function getAllBudgets(userId) {
   return db
     .collection("budgets")
     .where("uId", "==", userId)
+    .orderBy("date", "desc")
     .get()
     .then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
@@ -83,12 +70,13 @@ function getAllBudgets(userId) {
     });
 }
 function getBudget(userId, docId) {
-  db.collection("budgets")
+  return db.collection("budgets")
     .doc(docId)
     .get()
     .then((doc) => {
-      if (doc.uId === userId) {
-        return doc;
+      const budget = doc.data();
+      if (budget.uId === userId) {
+        return budget;
       }
     });
 }
@@ -108,8 +96,28 @@ function sendResetPasswordEmail(email) {
 function editUserInfo(userDocId, user) {
   return db.collection("users").doc(userDocId).set(user);
 }
+function editBudget(budgetDocId, budget) {
+  return db.collection("budgets").doc(budgetDocId).set(budget);
+}
 function editUserMembers(userDocId, membersList) {
-  return db.collection("users").doc(userDocId).set({ members: membersList });
+  return db.collection("users").doc(userDocId).update({ members: membersList });
+}
+function checkSsoUserExists(userId) {
+  let user;
+  return db
+    .collection("users")
+    .where("firebaseAuthUserUID", "==", userId)
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        user = doc
+      });
+      return user;
+    })
+
+}
+function editExpenses(budgetDocId, expenseList) {
+  return db.collection("budgets").doc(budgetDocId).update({ expenses: expenseList });
 }
 
 export {
@@ -119,6 +127,7 @@ export {
   deleteBudget,
   editBudget,
   getAllBudgets,
+  editExpenses,
   getBudget,
   getDbUser,
   editUserPassword,
@@ -129,4 +138,5 @@ export {
   editUserInfo,
   editInfoSnackbarState,
   editUserMembers,
+  checkSsoUserExists
 };

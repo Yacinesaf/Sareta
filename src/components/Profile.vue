@@ -3,10 +3,7 @@
     <v-col cols="10" md="5">
       `
       <v-row class="mx-0 justify-center mb-4">
-        <v-avatar
-          style="color: #404b3b; border: 5px solid #404b3b"
-          :size="!dbUser.isSso ? '100' : '150'"
-        >
+        <v-avatar style="color: #404b3b; border: 5px solid #404b3b" :size="!dbUser.isSso ? '100' : '150'">
           <div class="text-h2">
             {{ initials(dbUser) }}
           </div>
@@ -18,18 +15,8 @@
           <v-text-field
             :readonly="isPasswordReadonly"
             dense
-            :rules="
-              isPasswordReadonly
-                ? []
-                : [rules.required, rules.password, rules.min]
-            "
-            :append-icon="
-              !isPasswordReadonly
-                ? showPassword
-                  ? 'mdi-eye'
-                  : 'mdi-eye-off'
-                : ''
-            "
+            :rules="isPasswordReadonly ? [] : [rules.required, rules.password, rules.min]"
+            :append-icon="!isPasswordReadonly ? (showPassword ? 'mdi-eye' : 'mdi-eye-off') : ''"
             :type="showPassword ? 'text' : 'password'"
             name="password"
             style="border-radius: 6px"
@@ -38,36 +25,21 @@
             hint="At least 8 characters"
             outlined
           ></v-text-field>
-          <v-btn
-            v-if="isPasswordReadonly"
-            @click="editPassword"
-            outlined
-            style="height: 40px; width: 40px"
-            class="ml-3"
+          <v-btn v-if="isPasswordReadonly" @click="editPassword" outlined style="height: 40px; width: 40px" class="ml-3"
             ><v-icon>mdi-pencil</v-icon>
           </v-btn>
           <div v-else class="d-flex">
-            <v-btn
-              @click="confirmPasswordEdit"
-              outlined
-              style="height: 40px; width: 40px"
-              class="ml-3"
+            <v-btn @click="confirmPasswordEdit" outlined style="height: 40px; width: 40px" class="ml-3"
               ><v-icon>mdi-check</v-icon>
             </v-btn>
-            <v-btn
-              @click="cancelPasswordEdit"
-              outlined
-              style="height: 40px; width: 40px"
-              class="ml-3"
+            <v-btn @click="cancelPasswordEdit" outlined style="height: 40px; width: 40px" class="ml-3"
               ><v-icon>mdi-cancel</v-icon>
             </v-btn>
           </div>
         </div>
       </div>
-      <div v-if="isReadonly" class="d-flex justify-end">
-        <v-btn @click="enableUserInfoEditing" outlined style="height: 40px"
-          >Edit your infos
-        </v-btn>
+      <div class="py-6  py-md-0 justify-center justify-md-end d-flex" v-if="isReadonly">
+        <v-btn @click="enableUserInfoEditing" outlined style="height: 40px">Edit your infos </v-btn>
       </div>
       <label class="text-h6" for="displayName">Name</label>
       <v-text-field
@@ -80,15 +52,15 @@
         v-model="displayName"
         outlined
       ></v-text-field>
-      <label class="text-h6" for="net">Net income</label>
+      <label class="text-h6" for="gross">Gross yearly income</label>
       <v-text-field
         :readonly="isReadonly"
-        name="net"
+        name="gross"
         dense
         :rules="[rules.required]"
         type="number"
         style="border-radius: 6px"
-        v-model="net"
+        v-model="gross"
         outlined
       ></v-text-field>
       <label class="text-h6" for="tax">Approx. tax rate</label>
@@ -103,18 +75,10 @@
         outlined
       ></v-text-field>
       <div v-if="!isReadonly" class="d-flex justify-end">
-        <v-btn
-          @click="confirmUserInfoEdit"
-          outlined
-          style="height: 40px; width: 40px"
-          class="ml-3"
+        <v-btn @click="confirmUserInfoEdit" outlined style="height: 40px; width: 40px" class="ml-3"
           ><v-icon>mdi-check</v-icon>
         </v-btn>
-        <v-btn
-          @click="cancelUserInfoEdit"
-          outlined
-          style="height: 40px; width: 40px"
-          class="ml-3"
+        <v-btn @click="cancelUserInfoEdit" outlined style="height: 40px; width: 40px" class="ml-3"
           ><v-icon>mdi-cancel</v-icon>
         </v-btn>
       </div>
@@ -140,7 +104,7 @@ export default {
     return {
       initials: initials,
       password: "lllllllllllllllll",
-      net: "",
+      gross: "",
       tax: "",
       displayName: "",
       isReadonly: true,
@@ -160,7 +124,7 @@ export default {
       const obj = {
         displayName: this.displayName,
         tax: this.tax,
-        net: this.net,
+        gross: this.gross,
       };
       this.$store.dispatch("user/editUser", obj);
       this.isReadonly = true;
@@ -182,9 +146,8 @@ export default {
   },
 
   mounted() {
-    console.log(this.dbUser);
     this.displayName = this.dbUser.displayName;
-    if (this.dbUser.net) this.net = this.dbUser.net;
+    if (this.dbUser.gross) this.gross = this.dbUser.gross;
     if (this.dbUser.tax) this.tax = this.dbUser.tax;
   },
 };

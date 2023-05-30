@@ -6,7 +6,7 @@
     </v-card-title>
     <v-card-text>
       <div>Description</div>
-      <div class="text-h6 mb-8">{{ budget.description }}</div>
+      <div style="max-height: 60px; max-width: 280px" class="text-h6 mb-8 ellipsis">{{ budget.description }}</div>
       <v-row class="mx-0" justify="space-between">
         <div>
           <div class="text-end text-h6">{{ dateFormater(budget.date) }}</div>

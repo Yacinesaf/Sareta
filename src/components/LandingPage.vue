@@ -1,10 +1,5 @@
 <template>
   <v-row
-    :style="{
-      backgroundImage: `url(${require('@/assets/' + landingBg)})`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-    }"
     class="ma-0 animationFadeout"
     justify="center"
     align="center"
@@ -24,17 +19,6 @@
 
 <script>
 export default {
-  computed: {
-    landingBg() {
-      if (this.$vuetify.breakpoint.xs) {
-        return "BgMobile.png";
-      } else if (this.$vuetify.breakpoint.sm) {
-        return "BgIpad.png";
-      } else {
-        return "Bg1.png";
-      }
-    },
-  },
   data() {
     return {};
   },

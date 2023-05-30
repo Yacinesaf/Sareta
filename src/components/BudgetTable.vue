@@ -2,15 +2,19 @@
   <div>
     <v-card class="rounded-lg">
       <v-data-table
-        :sort-by="['name', 'frequency', 'amount', 'assignee']"
-        v-model="selected"
-        :single-select="singleSelect"
+        :sort-by="['name']"
+        :value="selected"
+        @input="changeSelectedList"
+        :single-select="false"
         show-select
+        must-sort
+        :loading="isFetching"
         :headers="tableHeader"
-        :items="expenses"
-        :items-per-page="5"
+        :items="isFetching ? [] : indexedExpenses"
+        :items-per-page="10"
         class="elevation-1"
-        item-key="name"
+        :items-per-page-options="[10,20,30,40]"
+        item-key="index"
       >
         <template v-slot:item.action="{ item }">
           <v-btn icon @click="editExpense(item)">
@@ -26,6 +30,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   data() {
     return {
@@ -34,41 +39,45 @@ export default {
         { text: "Name", value: "name" },
         { text: "Frequency", value: "frequency" },
         { text: "Amount", value: "amount" },
-        { text: "Assignee", value: "assignee", align: this.doesHaveAssignee ? "d-block" : "d-none" },
+        { text: "Assignee", value: "assignee" },
         { text: "", value: "action", align: "right" },
       ],
-      doesHaveAssignee: false,
-      singleSelect: false,
-      selected: [],
       userCurencySymbol: "$",
-      expenses: [
-        { name: "car gass", frequency: "weekly", amount: 51.27, assignee: "Islam" },
-        { name: "car gasss", frequency: "weekly", amount: 51.27, assignee: "yacine" },
-        { name: "car gassss", frequency: "weekly", amount: 51.27, assignee: "Islam" },
-        { name: "car gasw", frequency: "weekly", amount: 51.27, assignee: "Islam" },
-        { name: "car gase", frequency: "weekly", amount: 51.27, assignee: "Islam" },
-        { name: "car gast", frequency: "weekly", amount: 51.27, assignee: "Islam" },
-        { name: "car gasr", frequency: "weekly", amount: 51.27, assignee: "Islam" },
-        { name: "car gasy", frequency: "weekly", amount: 51.27, assignee: "Islam" },
-      ],
     };
   },
+  props: {
+    selected: Array,
+    indexedExpenses: Array,
+  },
   computed: {
-    isExpensesLengthOverTen() {
-      return this.expenses.length >= 10;
-    },
+    ...mapState({
+      expenses: (state) => state.budgets.currentBudget?.expenses,
+      isFetching: (state) => state.budgets.isFetching,
+    }),
+
   },
   methods: {
-    amount(amount) {
-      return `${parseFloat(amount).toFixed(2)} ${this.userCurencySymbol}`;
+    changeSelectedList(newList) {
+      this.$emit("selectedListChange", newList)
     },
     deleteExpense(expense) {
-      console.log(expense);
+      let expensesCopy = [...this.expenses];
+      expensesCopy.splice(expense.index, 1);
+      this.$emit("selectedListChange", expensesCopy)
+      this.$store.dispatch("budgets/updateExpenses", expensesCopy);
     },
     editExpense(expense) {
-      console.log(expense);
+      this.$root.$emit("openEditExpenseDialog", expense);
     },
   },
+  // watch: {
+  //   selected: function () {
+  //     this.$emit("selectedExpenses", this.selected);
+  //   },
+  //   selectedExpenses: function () {
+  //     this.selected = this.selectedExpenses
+  //   },
+  // },
 };
 </script>
 <style scoped></style>

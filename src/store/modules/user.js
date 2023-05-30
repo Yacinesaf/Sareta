@@ -1,14 +1,10 @@
 import {
   createUser,
-  createUserWithEmail,
-  editUserMembers,
-  editUserInfo,
-  editUserPassword,
+  createUserWithEmail, editInfoSnackbarState, editUserInfo, editUserMembers, editUserPassword,
   getDbUser,
   sendResetPasswordEmail,
   signout,
-  userSignIn,
-  editInfoSnackbarState,
+  userSignIn
 } from "../../api/endpoints";
 import * as authErrorsMsgs from "../../utils/firebaseAuthErrorList.json";
 const state = { authUser: null, dbUser: null };
@@ -25,7 +21,7 @@ const actions = {
           displayName: name,
           isSso: false,
           tax: null,
-          net: null,
+          gross: null,
           members: [],
         };
         await createUser(newUser);
@@ -141,13 +137,13 @@ const actions = {
         );
       });
   },
-  editUserMembers({ dispatch, commit, state }, memberList) {
-    editUserMembers(state.dbUser.docId, memberList)
+  editUserMembers({ dispatch, commit, state }, obj) {
+    return editUserMembers(state.dbUser.docId, obj.membersList)
       .then(() => {
-        commit("setUserMembers", memberList);
+        commit("setUserMembers", obj.membersList);
         dispatch(
           "snackbar/toggleSnackbar",
-          { color: "green", message: "A new member has been added" },
+          { color: "green", message: obj.isDeleting? "Member deleted successfully" : "A new member has been added" },
           { root: true }
         );
       })
@@ -157,7 +153,7 @@ const actions = {
           {
             color: "red",
             message:
-              "A problem occured while adding a new member.Please try again",
+              "A problem occured. Please try again",
           },
           { root: true }
         );
