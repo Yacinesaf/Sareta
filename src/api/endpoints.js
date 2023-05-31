@@ -47,11 +47,6 @@ function createBudget(obj) {
 function deleteBudget(budgetDocId) {
   return db.collection("budgets").doc(budgetDocId).delete();
 }
-function editInfoSnackbarState(userDocId) {
-  db.collection("users").doc(userDocId).update({
-    dontShowAlertAgain: true,
-  });
-}
 function getAllBudgets(userId) {
   const budgets = [];
   return db
@@ -136,7 +131,6 @@ export {
   userSignIn,
   signout,
   editUserInfo,
-  editInfoSnackbarState,
   editUserMembers,
   checkSsoUserExists
 };

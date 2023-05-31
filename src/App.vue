@@ -1,7 +1,7 @@
 <template>
   <v-app
     :style="{
-      backgroundImage: `url(${require('@/assets/' + landingBg)})`,
+      backgroundImage: `url(${landingBg})`,
       backgroundSize: 'cover',
       backgroundPosition: 'center',
     }"
@@ -18,7 +18,6 @@
       </div>
 
       <div v-else>
-      <info-snackbar />
         <navbar />
         <back-to-home />
         <snackbar />
@@ -31,16 +30,16 @@
 <script>
 import { mapState } from "vuex";
 import BackToHome from "./components/BackToHome.vue";
-import InfoSnackbar from "./components/InfoSnackbar.vue";
 import Navbar from "./components/Navbar.vue";
 import Snackbar from "./components/Snackbar.vue";
+import { mobileConnected, BgMobile, iPadConnected, BgIpad, desktopConnected, Bg1 } from "./assets/firebaseStorage.json";
+
 export default {
   name: "App",
 
   components: {
     Navbar,
     Snackbar,
-    InfoSnackbar,
     BackToHome,
   },
   computed: {
@@ -52,14 +51,14 @@ export default {
     },
     landingBg() {
       if (this.$vuetify.breakpoint.xs) {
-        if (this.dbUserAuthId) return "mobileConnected.png";
-        return "BgMobile.png";
+        if (this.dbUserAuthId) return mobileConnected;
+        return BgMobile;
       } else if (this.$vuetify.breakpoint.sm) {
-        if (this.dbUserAuthId) return "iPadConnected.png";
-        return "BgIpad.png";
+        if (this.dbUserAuthId) return iPadConnected;
+        return BgIpad;
       } else {
-        if (this.dbUserAuthId) return "desktopConnected.png";
-        return "Bg1.png";
+        if (this.dbUserAuthId) return desktopConnected;
+        return Bg1;
       }
     },
   },
@@ -83,5 +82,18 @@ export default {
   word-wrap: break-word;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.animationFadeout {
+  animation: fadeOut;
+  animation-duration: 1s;
+}
+@keyframes fadeOut {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 </style>

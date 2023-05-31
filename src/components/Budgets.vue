@@ -32,7 +32,7 @@
           <budget-card @deleteBudget="deleteBudget" :budget="budget" />
         </v-col>
         <v-btn
-          v-if="this.$vuetify.breakpoint.smAndDown"
+          v-if="this.$vuetify.breakpoint.smAndDown && budgets.length"
           @click="openAddBudgetDialog"
           fixed
           bottom
@@ -63,7 +63,12 @@
         <div class="text-h6 text-md-h4 text-center mt-6">You don't have any budget set up</div>
         <v-btn @click="openAddBudgetDialog" class="rounded-lg mt-4" outlined> Add a budget </v-btn>
       </div>
-      <v-dialog transition="scroll-y-reverse-transition" :value="isDialogOpen" width="500">
+      <v-dialog
+        @click:outside="closeAddBudgetDialog"
+        transition="scroll-y-reverse-transition"
+        :value="isDialogOpen"
+        width="500"
+      >
         <v-card>
           <div class="pa-6">
             <div class="text-h5 pb-6" style="font-weight: 600">Add new budget</div>
@@ -95,7 +100,6 @@
 
 <script>
 import rules from "../rules/rules";
-
 import BudgetCard from "./BudgetCard.vue";
 import { mapState } from "vuex";
 export default {
@@ -106,6 +110,7 @@ export default {
     },
     ...mapState({
       userId: (state) => state.user.authUser.uid,
+      user: (state) => state.user.dbUser,
       budgets: (state) => state.budgets.budgets,
     }),
     areBudgetsPopulated() {
@@ -138,7 +143,6 @@ export default {
           description: this.description,
           name: this.budgetName,
           expenses: [],
-          members: [],
         });
         this.closeAddBudgetDialog();
         this.resetCreateBudgetFields();

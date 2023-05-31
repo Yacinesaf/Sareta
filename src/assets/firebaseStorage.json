@@ -1,0 +1,9 @@
+{
+  "Bg1": "https://firebasestorage.googleapis.com/v0/b/sareta-f8acd.appspot.com/o/Bg1.png?alt=media&token=5607ba2c-cf98-43fa-8f83-751777e08d30",
+  "BgIpad": "https://firebasestorage.googleapis.com/v0/b/sareta-f8acd.appspot.com/o/BgIpad.png?alt=media&token=a02fdd40-d67f-4eac-8b14-e24c69e42b34",
+  "BgMobile": "https://firebasestorage.googleapis.com/v0/b/sareta-f8acd.appspot.com/o/BgMobile.png?alt=media&token=44116a65-b459-47f3-a158-30fb7c14f0fc",
+  "desktopConnected": "https://firebasestorage.googleapis.com/v0/b/sareta-f8acd.appspot.com/o/desktopConnected.png?alt=media&token=5be85047-1eb0-4cd3-9f41-a16f1e8197f8",
+  "emptyState": "https://firebasestorage.googleapis.com/v0/b/sareta-f8acd.appspot.com/o/emptyState.png?alt=media&token=29bc7697-58e5-4244-9439-69933036cd7c",
+  "iPadConnected": "https://firebasestorage.googleapis.com/v0/b/sareta-f8acd.appspot.com/o/iPadConnected.png?alt=media&token=c049ee27-0e0c-48ce-a41a-a9f0eaeae177",
+  "mobileConnected": "https://firebasestorage.googleapis.com/v0/b/sareta-f8acd.appspot.com/o/mobileConnected.png?alt=media&token=7dd1ba7d-438d-4a1e-b011-bb451b78183e"
+}

@@ -1,9 +1,5 @@
 <template>
-  <div
-
-    class="d-flex justify-center px-3 animationFadeout"
-    style="align-items: center; min-height: calc(100vh - 64px)"
-  >
+  <div class="d-flex justify-center px-3 animationFadeout" style="align-items: center; min-height: calc(100vh - 64px)">
     <v-row justify="center">
       <v-col class="px-0 entryCard animationFadeout" cols="10" sm="9" md="6" lg="4" xl="3">
         <v-card style="border-radius: 16px">
@@ -12,22 +8,26 @@
               <div class="text-h5 text-center" style="font-weight: 600">
                 Choose a method to sign up and start improving your spening
               </div>
-              <div class="d-flex align-center pt-6" style="flex-direction: column">
-                <v-btn
-                  :key="i"
-                  v-for="(btn, i) in signupBtns"
-                  :style="`min-width: ${btnWidth} !important;`"
-                  x-large
-                  @click="getSignupFunction(btn.icon)"
-                  class="shadow my-3 justify-start"
-                >
-                  <span
-                    ><v-icon color="primary" class="mr-2">mdi-{{ btn.icon }}</v-icon></span
+              <v-row>
+                <v-col c class="d-flex align-center pt-6" style="flex-direction: column">
+                  <v-btn
+                    :key="i"
+                    v-for="(btn, i) in signupBtns"
+                    :style="`min-width: ${btnWidth} !important; width: ${
+                      $vuetify.breakpoint.smAndDown ? '90%' : 'unset'
+                    }`"
+                    x-large
+                    @click="getSignupFunction(btn.icon)"
+                    class="shadow my-3 justify-start"
                   >
-                  <span class="mr-1" v-show="$vuetify.breakpoint.smAndUp">Continue with</span>
-                  <span>{{ btn.text }}</span>
-                </v-btn>
-              </div>
+                    <span
+                      ><v-icon color="primary" class="mr-2">mdi-{{ btn.icon }}</v-icon></span
+                    >
+                    <span class="mr-1" v-show="$vuetify.breakpoint.smAndUp">Continue with</span>
+                    <span>{{ btn.text }}</span>
+                  </v-btn>
+                </v-col>
+              </v-row>
             </v-col>
             <v-col v-else class="pt-12 pb-6 animationFadeout" cols="10">
               <div v-if="!isLoggingIn" style="position: absolute; top: 2rem; left: 1rem">
@@ -169,6 +169,7 @@
 import { getAuth, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
 import rules from "../rules/rules";
 import { createUser, checkSsoUserExists } from "../api/endpoints";
+import { generateTemplate } from "../helper/functions";
 export default {
   computed: {
     btnWidth() {
@@ -221,7 +222,6 @@ export default {
           const userExist = await checkSsoUserExists(result.user.uid);
           const user = {
             firebaseAuthUserUID: result.user.uid,
-            dontShowAlertAgain: false,
             email: result.user.email,
             displayName: result.user.displayName,
             isSso: true,
@@ -230,9 +230,12 @@ export default {
             members: [],
           };
           if (!userExist?.exists) {
-            createUser(user);
+            await createUser(user);
+            this.$store.commit("user/setDbUser", user);
+            await this.$store.dispatch("budgets/addBudget", generateTemplate(user.displayName));
+          } else {
+            await this.$store.dispatch("user/getUser", result.user.uid);
           }
-          this.$store.commit("user/setDbUser", user);
           this.$store.commit("user/setAuthUser", {
             displayName: result.user.displayName,
             email: result.user.email,
@@ -345,19 +348,6 @@ export default {
   -webkit-box-shadow: -15px 15px 0px 2px rgba(33, 51, 29, 1);
   -moz-box-shadow: -15px 15px 0px 2px rgba(33, 51, 29, 1);
 }
-.animationFadeout {
-  animation: fadeOut;
-  animation-duration: 1s;
-}
-@keyframes fadeOut {
-  from {
-    opacity: 0%;
-  }
-  to {
-    opacity: 100%;
-  }
-}
-
 .shadow {
   border: 1px #404b3b solid;
   border-radius: 10px;

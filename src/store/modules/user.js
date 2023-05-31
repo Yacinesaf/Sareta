@@ -1,11 +1,12 @@
 import {
   createUser,
-  createUserWithEmail, editInfoSnackbarState, editUserInfo, editUserMembers, editUserPassword,
+  createUserWithEmail, editUserInfo, editUserMembers, editUserPassword,
   getDbUser,
   sendResetPasswordEmail,
   signout,
   userSignIn
 } from "../../api/endpoints";
+import { generateTemplate } from "../../helper/functions";
 import * as authErrorsMsgs from "../../utils/firebaseAuthErrorList.json";
 const state = { authUser: null, dbUser: null };
 const getters = {};
@@ -16,7 +17,6 @@ const actions = {
       .then(async (userCredential) => {
         const newUser = {
           firebaseAuthUserUID: userCredential.user.uid,
-          dontShowAlertAgain: false,
           email: email,
           displayName: name,
           isSso: false,
@@ -27,6 +27,8 @@ const actions = {
         await createUser(newUser);
         commit("setAuthUser", userCredential.user);
         commit("setDbUser", newUser);
+        dispatch("budgets/addBudget", generateTemplate(newUser.displayName));
+
       })
       .catch((error) => {
         dispatch(
@@ -143,7 +145,7 @@ const actions = {
         commit("setUserMembers", obj.membersList);
         dispatch(
           "snackbar/toggleSnackbar",
-          { color: "green", message: obj.isDeleting? "Member deleted successfully" : "A new member has been added" },
+          { color: "green", message: obj.isDeleting ? "Member deleted successfully" : "A new member has been added" },
           { root: true }
         );
       })
@@ -158,10 +160,6 @@ const actions = {
           { root: true }
         );
       });
-  },
-  async editSnackbarInfo({ commit, state }) {
-    await editInfoSnackbarState(state.dbUser.docId);
-    commit("closeMoreInfoSnackbar");
   },
 };
 const mutations = {
@@ -178,9 +176,7 @@ const mutations = {
   setUserMembers(state, memberList) {
     state.dbUser.members = memberList;
   },
-  closeMoreInfoSnackbar(state) {
-    state.dbUser.dontShowAlertAgain = true;
-  },
+
   setEditedUser(state, editedUser) {
     state.dbUser = editedUser;
   },

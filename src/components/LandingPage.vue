@@ -5,7 +5,7 @@
     align="center"
   >
     <v-col cols="12" md="8" lg="5">
-      <div class="text-h2 text-center textShadow" style="font-weight: 600">
+      <div class="text-h3 text-md-h2 text-center textShadow" style="font-weight: 600">
         Take your finance planing to the next Step
       </div>
       <div class="text-center pt-6">Sign up right now to structure you spending</div>
@@ -39,17 +39,5 @@ export default {
   -webkit-box-shadow: -7.5px 7.5px 0px 2px rgba(33, 51, 29, 1);
   -moz-box-shadow: -7.5px 7.5px 0px 2px rgba(33, 51, 29, 1);
   cursor: pointer;
-}
-.animationFadeout {
-  animation: fadeOut;
-  animation-duration: 1s;
-}
-@keyframes fadeOut {
-  from {
-    opacity: 0%;
-  }
-  to {
-    opacity: 100%;
-  }
 }
 </style>

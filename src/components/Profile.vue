@@ -1,7 +1,7 @@
 <template>
-  <v-row class="justify-center pt-12 ma-0">
+  <v-row class="justify-center pt-12 ma-0" style="position: relative">
+    <v-btn absolute top right @click="logOut" outlined>Log out</v-btn>
     <v-col cols="10" md="5">
-      `
       <v-row class="mx-0 justify-center mb-4">
         <v-avatar style="color: #404b3b; border: 5px solid #404b3b" :size="!dbUser.isSso ? '100' : '150'">
           <div class="text-h2">
@@ -38,7 +38,7 @@
           </div>
         </div>
       </div>
-      <div class="py-6  py-md-0 justify-center justify-md-end d-flex" v-if="isReadonly">
+      <div class="py-6 py-md-0 justify-center justify-md-end d-flex" v-if="isReadonly">
         <v-btn @click="enableUserInfoEditing" outlined style="height: 40px">Edit your infos </v-btn>
       </div>
       <label class="text-h6" for="displayName">Name</label>
@@ -115,6 +115,10 @@ export default {
   methods: {
     enableUserInfoEditing() {
       this.isReadonly = false;
+    },
+    async logOut() {
+      await this.$store.dispatch("user/logOut");
+      this.$router.push({ name: "EntryPage", params: { state: "login" } });
     },
     editPassword() {
       this.password = "";

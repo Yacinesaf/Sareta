@@ -24,7 +24,16 @@
             :rules="[rules.required]"
             id="expenseAmount"
           ></v-text-field>
-          <v-select v-model="expense.assignee" :items="membersListFormatted" label="Member" outlined> </v-select>
+          <v-select
+            persistent-hint
+            hint="If no member is selected, the expense will be automaticly assigned to you"
+            class="pb-2"
+            v-model="expense.assignee"
+            :items="membersListFormatted"
+            label="Member"
+            outlined
+          >
+          </v-select>
           <v-select v-model="expense.frequency" :items="frequencies" label="Frequency" outlined></v-select>
           <div class="d-flex justify-end">
             <v-btn v-if="isEditing" @click="update" color="primary">Update</v-btn>
