@@ -59,7 +59,7 @@
         v-if="!areBudgetsPopulated && !isLoadingBudgets"
         cols="5"
       >
-        <img src="@/assets/emptyState.png" height="200px" width="auto" wid alt="" />
+        <img :src="emptyState" height="200px" width="auto" wid alt="" />
         <div class="text-h6 text-md-h4 text-center mt-6">You don't have any budget set up</div>
         <v-btn @click="openAddBudgetDialog" class="rounded-lg mt-4" outlined> Add a budget </v-btn>
       </div>
@@ -99,6 +99,7 @@
 </template>
 
 <script>
+import { emptyState } from "../assets/firebaseStorage.json";
 import rules from "../rules/rules";
 import BudgetCard from "./BudgetCard.vue";
 import { mapState } from "vuex";
@@ -115,6 +116,9 @@ export default {
     }),
     areBudgetsPopulated() {
       return this.budgets.length;
+    },
+    emptyState() {
+      return emptyState;
     },
   },
   data() {
@@ -166,8 +170,4 @@ export default {
   },
 };
 </script>
-<style scoped>
-::v-deep .v-skeleton-loader__image {
-  height: 378px !important;
-}
-</style>
+<style scoped></style>

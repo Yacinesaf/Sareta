@@ -16,7 +16,7 @@
       >
         <v-progress-circular indeterminate size="60" width="6" color="primary"></v-progress-circular>
       </div>
-
+      
       <div v-else>
         <navbar />
         <back-to-home />
