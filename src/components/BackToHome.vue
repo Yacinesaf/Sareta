@@ -3,7 +3,7 @@
     depressed
     v-if="showBackBtn"
     color="transparent"
-    style="position: absolute; left: 1rem; top: 5rem"
+    style="position: absolute; left: 1rem; top: 5rem; z-index: 100"
     @click="goHome"
     ><v-icon size="2.5rem">mdi-chevron-left</v-icon></v-btn
   >

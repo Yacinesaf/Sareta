@@ -17,7 +17,7 @@
     <v-row style="height: 90vh" class="justify-center align-center" v-if="isLoadingBudgets">
       <v-progress-circular indeterminate size="60" width="6" color="primary"></v-progress-circular>
     </v-row>
-    <v-row class="pt-6 mx-0" v-else align="center" justify="center">
+    <v-row class="pt-6 mx-0" style="padding-bottom: 80px" v-else align="center" justify="center">
       <v-row class="ma-0">
         <v-col
           @click="goToBudgetManager(budget)"
@@ -36,7 +36,7 @@
           @click="openAddBudgetDialog"
           fixed
           bottom
-          left
+          right
           color="primary"
           ripple
           elevation="3"
@@ -167,6 +167,14 @@ export default {
     this.$store.dispatch("budgets/getBudgets").then(() => {
       this.isLoadingBudgets = false;
     });
+  },
+  isDialogOpen: {
+    dialog: function (newValue, old) {
+      old;
+      if (!newValue) {
+        this.$refs.budgetForm.reset();
+      }
+    },
   },
 };
 </script>

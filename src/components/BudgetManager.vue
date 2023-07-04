@@ -5,7 +5,7 @@
         <v-col cols="11" md="9" lg="8">
           <v-row class="mb-3">
             <v-col cols="12" lg="8">
-              <v-form lazy-validation v-if="isEditingName" v-model="validName">
+              <v-form @submit="confirmNameChange" lazy-validation v-if="isEditingName" v-model="validName">
                 <v-text-field
                   autofocus
                   v-click-outside="onClickOutsideName"
@@ -14,7 +14,7 @@
                   clearable
                 >
                   <template v-slot:append-outer>
-                    <v-btn elevation="0" outlined :disabled="!validName" @click="confirmChanges('name')">
+                    <v-btn elevation="0" outlined :disabled="!validName" @click="confirmNameChange">
                       <v-icon>mdi-check</v-icon>
                     </v-btn>
                   </template>
@@ -28,7 +28,7 @@
               >
                 {{ currentBudget?.name }}
               </div>
-              <v-form lazy-validation v-if="isEditingDesc" v-model="validDesc">
+              <v-form @submit="confirmDescChange" class="pt-3" lazy-validation v-if="isEditingDesc" v-model="validDesc">
                 <v-textarea
                   autofocus
                   v-click-outside="onClickOutsideDesc"
@@ -37,7 +37,7 @@
                   clearable
                 >
                   <template v-slot:append-outer>
-                    <v-btn elevation="0" outlined :disabled="!validDesc" @click="confirmChanges">
+                    <v-btn elevation="0" outlined :disabled="!validDesc" @click="confirmDescChange">
                       <v-icon>mdi-check</v-icon>
                     </v-btn>
                   </template>
@@ -47,7 +47,7 @@
                 v-else
                 @click="enableEditBudgetDesc"
                 style="font-size: 1.15rem; cursor: pointer; max-width: 300px"
-                class="ellipsis"
+                class="ellipsis pt-3"
               >
                 {{ currentBudget?.description }}
               </div>
@@ -226,21 +226,21 @@ export default {
     onClickOutsideDesc() {
       this.isEditingDesc = false;
     },
-    confirmChanges(field) {
+    confirmNameChange() {
       let currentBudgetCopy = { ...this.currentBudget };
-      if (field == "name") {
-        if (this.newBudgetName !== this.currentBudget.name) {
-          currentBudgetCopy.name = this.newBudgetName;
-          this.$store.dispatch("budgets/updateBudget", currentBudgetCopy);
-        }
-        this.onClickOutsideName();
-      } else {
-        if (this.newBudgetDesc !== this.currentBudget.description) {
-          currentBudgetCopy.description = this.newBudgetDesc;
-          this.$store.dispatch("budgets/updateBudget", currentBudgetCopy);
-        }
-        this.onClickOutsideDesc();
+      if (this.newBudgetName !== this.currentBudget.name) {
+        currentBudgetCopy.name = this.newBudgetName;
+        this.$store.dispatch("budgets/updateBudget", currentBudgetCopy);
       }
+      this.onClickOutsideName();
+    },
+    confirmDescChange() {
+      let currentBudgetCopy = { ...this.currentBudget };
+      if (this.newBudgetDesc !== this.currentBudget.description) {
+        currentBudgetCopy.description = this.newBudgetDesc;
+        this.$store.dispatch("budgets/updateBudget", currentBudgetCopy);
+      }
+      this.onClickOutsideDesc();
     },
     updateBudgetCurrency() {
       let copyBudget = { ...this.currentBudget };

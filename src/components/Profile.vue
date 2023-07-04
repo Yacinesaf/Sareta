@@ -57,7 +57,7 @@
         :readonly="isReadonly"
         name="gross"
         dense
-        :rules="[rules.required]"
+        :rules="[isReadonly ? '' : rules.required]"
         type="number"
         style="border-radius: 6px"
         v-model="gross"
@@ -68,10 +68,11 @@
         :readonly="isReadonly"
         dense
         name="tax"
-        :rules="[rules.required]"
+        :rules="[isReadonly ? '' : rules.required]"
         type="number"
         style="border-radius: 6px"
         v-model="tax"
+        suffix="%"
         outlined
       ></v-text-field>
       <div v-if="!isReadonly" class="d-flex justify-end">

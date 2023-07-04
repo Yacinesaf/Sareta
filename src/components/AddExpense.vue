@@ -129,6 +129,7 @@ export default {
         };
         this.editingExpenseIndex = null;
         this.isEditing = false;
+        this.$refs.addExpense.reset()
       }
     },
   },

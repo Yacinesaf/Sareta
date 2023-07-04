@@ -287,6 +287,7 @@ export default {
     sendResetPasswordEmail() {
       if (this.$refs.resetPassword.validate()) {
         this.$store.dispatch("user/sendResetPasswordEmail", this.emailPassword);
+        this.$refs.form.reset();
       }
     },
     login() {
@@ -313,6 +314,7 @@ export default {
           .then(() => {
             this.isBtnLoading = false;
             this.$router.push("/budgets");
+            this.$refs.form.reset();
           });
       }
     },

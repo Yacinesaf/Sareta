@@ -19,18 +19,23 @@ function getBudgetCardImage() {
       return res.data.urls.regular;
     });
 }
+
 function createUserWithEmail(email, password) {
   return createUserWithEmailAndPassword(auth, email, password);
 }
+
 function userSignIn(email, password) {
   return signInWithEmailAndPassword(auth, email, password);
 }
+
 function signout() {
   return signOut(auth);
 }
+
 function createUser(userObj) {
   return db.collection("users").add(userObj);
 }
+
 function createBudget(obj) {
   return db
     .collection("budgets")
@@ -44,9 +49,11 @@ function createBudget(obj) {
       console.error("Error adding document: ", error);
     });
 }
+
 function deleteBudget(budgetDocId) {
   return db.collection("budgets").doc(budgetDocId).delete();
 }
+
 function getAllBudgets(userId) {
   const budgets = [];
   return db
@@ -64,6 +71,7 @@ function getAllBudgets(userId) {
       console.log("Error getting documents: ", error);
     });
 }
+
 function getBudget(userId, docId) {
   return db.collection("budgets")
     .doc(docId)
@@ -75,6 +83,7 @@ function getBudget(userId, docId) {
       }
     });
 }
+
 function getDbUser(userId) {
   return db
     .collection("users")
@@ -85,18 +94,23 @@ function editUserPassword(newPassword) {
   const user = firebase.auth().currentUser;
   return user.updatePassword(newPassword);
 }
+
 function sendResetPasswordEmail(email) {
   return firebase.auth().sendPasswordResetEmail(email);
 }
+
 function editUserInfo(userDocId, user) {
   return db.collection("users").doc(userDocId).set(user);
 }
+
 function editBudget(budgetDocId, budget) {
   return db.collection("budgets").doc(budgetDocId).set(budget);
 }
+
 function editUserMembers(userDocId, membersList) {
   return db.collection("users").doc(userDocId).update({ members: membersList });
 }
+
 function checkSsoUserExists(userId) {
   let user;
   return db
@@ -111,26 +125,14 @@ function checkSsoUserExists(userId) {
     })
 
 }
+
 function editExpenses(budgetDocId, expenseList) {
   return db.collection("budgets").doc(budgetDocId).update({ expenses: expenseList });
 }
 
 export {
-  getBudgetCardImage,
-  createUser,
-  createBudget,
-  deleteBudget,
-  editBudget,
-  getAllBudgets,
-  editExpenses,
-  getBudget,
-  getDbUser,
-  editUserPassword,
-  sendResetPasswordEmail,
-  createUserWithEmail,
-  userSignIn,
-  signout,
-  editUserInfo,
-  editUserMembers,
-  checkSsoUserExists
+  checkSsoUserExists, createBudget, createUser, createUserWithEmail, deleteBudget,
+  editBudget, editExpenses, editUserInfo,
+  editUserMembers, editUserPassword, getAllBudgets, getBudget, getBudgetCardImage, getDbUser, sendResetPasswordEmail, signout, userSignIn
 };
+

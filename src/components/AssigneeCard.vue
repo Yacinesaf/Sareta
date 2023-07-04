@@ -130,6 +130,7 @@ export default {
           shipColor: null,
         };
         this.isEditing = false;
+        this.$refs.addMemberForm.reset()
       }
     },
   },
