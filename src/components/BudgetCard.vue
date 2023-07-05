@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import { dateFormater } from "../helper/functions";
+import { dateFormater } from "../services/functions";
 export default {
   props: {
     budget: Object,

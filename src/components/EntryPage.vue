@@ -168,8 +168,8 @@
 <script>
 import { getAuth, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
 import rules from "../rules/rules";
-import { createUser, checkSsoUserExists } from "../api/endpoints";
-import { generateTemplate } from "../helper/functions";
+import { createUser, checkSsoUserExists } from "../services/endpoints";
+import { generateTemplate } from "../services/functions";
 export default {
   computed: {
     btnWidth() {

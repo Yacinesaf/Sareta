@@ -1,8 +1,3 @@
-import BudgetManager from '@/components/BudgetManager';
-import Budgets from '@/components/Budgets';
-import EntryPage from '@/components/EntryPage';
-import LandingPage from '@/components/LandingPage';
-import Profile from '@/components/Profile';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import firebase from '../firebase/firebase';
@@ -14,7 +9,7 @@ const routes = [
     },
     path: '/signup',
     name: 'EntryPage',
-    component: EntryPage,
+    component: () => import('@/components/EntryPage'),
   },
   {
     meta: {
@@ -22,7 +17,7 @@ const routes = [
     },
     path: '/budgetManager/:id',
     name: 'BudgetManager',
-    component: BudgetManager,
+    component: () => import('@/components/BudgetManager'),
   },
   {
     meta: {
@@ -30,7 +25,7 @@ const routes = [
     },
     path: '/login',
     name: 'EntryPage',
-    component: EntryPage,
+    component: () => import('@/components/EntryPage'),
   },
   {
     meta: {
@@ -38,7 +33,7 @@ const routes = [
     },
     path: '/budgets',
     name: 'Budgets',
-    component: Budgets,
+    component: () => import('@/components/Budgets'),
   },
   {
     meta: {
@@ -46,7 +41,7 @@ const routes = [
     },
     path: '/profile',
     name: 'Profile',
-    component: Profile,
+    component: () => import('@/components/Profile'),
   },
   {
     path: '/',
@@ -54,7 +49,7 @@ const routes = [
       requireGuest: true
     },
     name: 'LandingPage',
-    component: LandingPage,
+    component: () => import('@/components/LandingPage'),
   },
 ]
 

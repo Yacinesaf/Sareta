@@ -5,8 +5,8 @@ import {
   sendResetPasswordEmail,
   signout,
   userSignIn
-} from "../../api/endpoints";
-import { generateTemplate } from "../../helper/functions";
+} from "../../services/endpoints";
+import { generateTemplate } from "../../services/functions";
 import * as authErrorsMsgs from "../../utils/firebaseAuthErrorList.json";
 const state = { authUser: null, dbUser: null };
 const getters = {};
@@ -25,9 +25,9 @@ const actions = {
           members: [],
         };
         await createUser(newUser);
+        dispatch("budgets/addBudget", generateTemplate(newUser.displayName), { root: true });
         commit("setAuthUser", userCredential.user);
         commit("setDbUser", newUser);
-        dispatch("budgets/addBudget", generateTemplate(newUser.displayName));
 
       })
       .catch((error) => {

@@ -1,6 +1,6 @@
 import {
   createBudget, deleteBudget, editBudget, editExpenses, getAllBudgets, getBudgetCardImage
-} from "../../api/endpoints";
+} from "../../services/endpoints";
 
 const state = { budgets: [], currentBudget: null, isFetching: false };
 const getters = {

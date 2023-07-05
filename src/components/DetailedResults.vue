@@ -49,7 +49,7 @@ import { Doughnut } from "vue-chartjs";
 import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement, CategoryScale } from "chart.js";
 import { mapState } from "vuex";
 ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale);
-import { currencyForamter } from "../helper/functions";
+import { currencyForamter } from "../services/functions";
 
 export default {
   computed: {

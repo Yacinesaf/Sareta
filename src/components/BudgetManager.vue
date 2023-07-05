@@ -267,6 +267,7 @@ export default {
     },
   },
   created() {
+    
     if (!this.$route.params.budget) {
       this.$store.dispatch("budgets/getCurrentBudget", this.$route.params.id);
     } else {

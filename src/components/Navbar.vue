@@ -21,7 +21,7 @@
 
 <script>
 import { mapState } from "vuex";
-import { initials } from "../helper/functions";
+import { initials } from "../services/functions";
 export default {
   computed: {
     ...mapState({

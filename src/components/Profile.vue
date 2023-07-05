@@ -57,7 +57,7 @@
         :readonly="isReadonly"
         name="gross"
         dense
-        :rules="[isReadonly ? '' : rules.required]"
+        :rules="isReadonly ? [] : [rules.required]"
         type="number"
         style="border-radius: 6px"
         v-model="gross"
@@ -68,11 +68,11 @@
         :readonly="isReadonly"
         dense
         name="tax"
-        :rules="[isReadonly ? '' : rules.required]"
+        :rules="isReadonly ? [] : [rules.required]"
         type="number"
         style="border-radius: 6px"
         v-model="tax"
-        suffix="%"
+        :suffix="tax.length ? '%' : ''"
         outlined
       ></v-text-field>
       <div v-if="!isReadonly" class="d-flex justify-end">
@@ -88,7 +88,7 @@
 </template>
 
 <script>
-import { initials } from "../helper/functions";
+import { initials } from "../services/functions";
 import { mapState } from "vuex";
 import rules from "../rules/rules";
 export default {
