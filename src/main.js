@@ -25,8 +25,8 @@ firebase.auth().onAuthStateChanged((user) => {
       uid: user.uid,
     }
     app.$store.commit("user/setAuthUser", userObj)
-    if(app.$store.state.user.dbUser)return;
+    if (app.$store.state.user.dbUser) return;
     app.$store.dispatch("user/getUser", userObj.uid);
   }
-  
+
 })

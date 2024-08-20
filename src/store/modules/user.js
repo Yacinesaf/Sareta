@@ -74,7 +74,7 @@ const actions = {
       });
   },
   getUser({ commit }, userId) {
-    let result = null;
+    let result;
     getDbUser(userId).then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         result = doc.data();

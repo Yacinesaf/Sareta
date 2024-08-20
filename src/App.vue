@@ -4,19 +4,17 @@
       backgroundImage: `url(${landingBg})`,
       backgroundSize: 'cover',
       backgroundPosition: 'center',
-    }"
-  >
+    }">
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
     <v-main>
       <div
         style="height: 100vh; display: flex; justify-content: center; align-items: center"
-        v-if="requiresAuth && !dbUserAuthId"
-      >
+        v-if="requiresAuth && !dbUserAuthId">
         <v-progress-circular indeterminate size="60" width="6" color="primary"></v-progress-circular>
       </div>
-      
+
       <div v-else>
         <navbar />
         <back-to-home />
