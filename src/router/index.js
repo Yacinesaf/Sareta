@@ -63,16 +63,23 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  // Check for requireAuth guard AND not logged in user
-  if (to.matched.some(record => record.meta.requiresAuth) && !firebase.auth().currentUser) next({ name: 'EntryPage', params: { state: "login" } })
+  const isLoggedIn = !!firebase.auth().currentUser;
 
-  // Check for requireGuest guard AND logged in user
-  else if (to.matched.some(record => record.meta.requireGuest) && firebase.auth().currentUser) {
-    if (from.path !== "/budgets") next({ name: 'Budgets' })
+
+  if (to.matched.some(record => record.meta.requiresAuth) && !isLoggedIn) {
+    router.push({ name: 'EntryPage', params: { state: 'login' } }).catch(() => { });
+    return
   }
 
+  // Route requires guest but user is logged in
+  if (to.matched.some(record => record.meta.requireGuest) && isLoggedIn) {
+    router.push({ name: 'Budgets' }).catch(() => { });
+    return
+  }
 
-  else next()
-  window.scrollTo(0, 0)
-})
+  next();
+  window.scrollTo(0, 0);
+});
+
+
 export default router;

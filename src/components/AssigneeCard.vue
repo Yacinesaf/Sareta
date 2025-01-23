@@ -14,15 +14,14 @@
             <v-card class="pb-8">
               <v-card-title> Add member </v-card-title>
               <v-card-text>
-                <v-form lazy-validation ref="addMemberForm">
+                <v-form lazy-validation ref="addMemberForm" @submit.prevent="">
                   <v-text-field
                     v-model="newMember.name"
                     label="Name"
                     :rules="[rules.required]"
                     outlined
                     type="text"
-                    clearable
-                  ></v-text-field>
+                    clearable></v-text-field>
                   <v-btn v-if="isEditing" class="float-right" @click="editMember" color="primary">Update</v-btn>
                   <v-btn v-else class="float-right" @click="addUserMember" color="primary">Confirm</v-btn>
                 </v-form>
@@ -56,6 +55,15 @@
 import { mapState } from "vuex";
 import rules from "../rules/rules";
 export default {
+  mounted() {
+    document.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        if (this.isEditing) this.editMember();
+        else this.addUserMember();
+      }
+    });
+  },
+
   computed: {
     ...mapState({
       userMembers: (state) => state.user.dbUser.members,
@@ -130,7 +138,7 @@ export default {
           shipColor: null,
         };
         this.isEditing = false;
-        this.$refs.addMemberForm.reset()
+        this.$refs.addMemberForm.reset();
       }
     },
   },

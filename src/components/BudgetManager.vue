@@ -165,7 +165,7 @@ export default {
             sumByAssignee.push({ assignee, amount: amountCalculated, color: "#404B3B" });
           } else {
             const index = this.user.members.findIndex((el) => el.name == assignee);
-            sumByAssignee.push({ assignee, amount: amountCalculated, color: this.user.members[index].shipColor });
+            sumByAssignee.push({ assignee, amount: amountCalculated, color: this.user.members[index]?.shipColor });
           }
         }
       });

@@ -18,7 +18,7 @@ export default {
   },
   methods: {
     goHome() {
-      this.$router.push("/budgets");
+      this.$router.push("/budgets").catch(()=>{});
     },
   },
 };

@@ -11,8 +11,7 @@
         v-if="dbUser"
         @click="goToProfile"
         style="color: white; border: 2px solid white; cursor: pointer"
-        size="40"
-      >
+        size="40">
         {{ initials(dbUser) }}
       </v-avatar>
     </v-app-bar>
@@ -44,12 +43,12 @@ export default {
       }
     },
     goHome() {
-      if (this.dbUser) this.$router.push({ name: "Budgets" });
-      this.$router.push({ name: "LandingPage" });
+      if (this.dbUser) this.$router.push({ name: "Budgets" }).catch(() => {});
+      else this.$router.push({ name: "LandingPage" }).catch(() => {});
     },
     goToProfile() {
       if (this.$route.path === "/profile") return;
-      this.$router.push({ name: "Profile" });
+      this.$router.push({ name: "Profile" }).catch(() => {});
     },
   },
 };

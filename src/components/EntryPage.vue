@@ -241,7 +241,7 @@ export default {
             email: result.user.email,
             uid: result.user.uid,
           });
-          this.$router.push("/budgets");
+          this.$router.push("/budgets").catch(()=>{});
         })
         .catch((error) => {
           this.$store.dispatch("snackbar/toggleSnackbar", {
@@ -299,7 +299,7 @@ export default {
         })
         .then(() => {
           this.isBtnLoading = false;
-          this.$router.push("/budgets");
+          this.$router.push("/budgets").catch(()=>{});
         });
     },
     signup() {
@@ -313,7 +313,7 @@ export default {
           })
           .then(() => {
             this.isBtnLoading = false;
-            this.$router.push("/budgets");
+            this.$router.push("/budgets").catch(()=>{});
             this.$refs.form.reset();
           });
       }
@@ -333,9 +333,9 @@ export default {
   watch: {
     isLoggingIn: function () {
       if (this.isLoggingIn) {
-        this.$router.replace("/login");
+        this.$router.replace("/login").catch(()=>{});;
       } else {
-        this.$router.replace("/signup");
+        this.$router.replace("/signup").catch(()=>{});;
       }
     },
   },
